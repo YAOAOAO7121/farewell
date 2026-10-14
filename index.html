@@ -1,0 +1,1020 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="theme-color" content="#000000">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>一場沒有人來的告別式</title>
+<meta name="description" content="你點過的連結，有些已經悄悄死掉了。6 分鐘，領取你的數位告別人格。">
+<meta property="og:title" content="一場沒有人來的告別式｜測出你的數位告別人格">
+<meta property="og:description" content="你點過的連結，有些已經悄悄死掉了。6 分鐘，領取你的數位告別人格。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+<style>
+:root{
+  --bg:#000; --bg2:#0b0b0b; --line:#3a3a3a; --ink:#bdbdbd; --hi:#e6e6e6; --muted:#8a8a8a; --faint:#555;
+  --g:#4ed46a; --c:#3fc8c8; --y:#e3d84a; --m:#cf5acf; --r:#d9534a; --blue:#2135a8;
+  /* 舊變數名保留成別名，避免 JS 裡的 inline style 失效 */
+  --amber:var(--g); --dead:var(--r); --alive:var(--g); --cyan:var(--c);
+  --mono:"MingLiU","PMingLiU","細明體","IBM Plex Mono","Noto Sans TC",monospace;
+  --latin:"IBM Plex Mono","MingLiU",monospace;
+  --serif:var(--mono); --sans:var(--mono);
+  --chroma:-1px 0 rgba(255,40,120,.6),1px 0 rgba(40,230,230,.55);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#000;color:var(--ink);font-family:var(--mono);-webkit-text-size-adjust:100%}
+body{min-height:100vh;min-height:100dvh;font-size:15px;line-height:1.6}
+/* CRT：掃描線、暗角、雜訊 */
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;background:repeating-linear-gradient(to bottom,rgba(255,255,255,.035) 0 1px,transparent 1px 3px)}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:51;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.7) 100%)}
+.noise{position:fixed;inset:0;pointer-events:none;z-index:52;opacity:.07;mix-blend-mode:screen;background-size:160px}
+button{font:inherit;color:inherit}
+::selection{background:var(--g);color:#000}
+.wrap{max-width:560px;margin:0 auto;padding:0 14px 120px;min-height:100dvh;display:flex;flex-direction:column;animation:flick 7s infinite}
+@keyframes flick{0%,95%,100%{opacity:1}96%{opacity:.7}97%{opacity:.95}}
+.demo{background:#2a2600;color:var(--y);font-size:12px;text-align:center;padding:4px 16px}
+.cur{animation:blink 1s steps(1) infinite;color:var(--g)}
+@keyframes blink{50%{opacity:0}}
+.ascii{font-family:var(--latin);font-size:13px;line-height:1.15;color:var(--muted);margin:0;white-space:pre;overflow:hidden}
+.rot{opacity:.3}
+
+/* 標題 glitch：平常靜止，JS 隨機加 .on 發作 → RGB 錯位 + 橫切位移；「別」「░」同時換成亂碼 */
+.glitch{position:relative}
+.glitch::before,.glitch::after{content:attr(data-text);position:absolute;inset:0;white-space:pre-line;pointer-events:none;opacity:0;text-shadow:none;mix-blend-mode:screen}
+.glitch::before{color:#ff2878}
+.glitch::after{color:#28e6e6}
+.glitch.on{animation:gj .45s steps(1) both}
+.glitch.on::before{opacity:.9;animation:gs1 .45s steps(1) both}
+.glitch.on::after{opacity:.9;animation:gs2 .45s steps(1) both}
+@keyframes gj{0%,35%,80%,100%{transform:none}10%{transform:translateX(-2px) skewX(-6deg)}20%{transform:translateX(3px)}50%{transform:translate(-1px,1px) skewX(4deg)}65%{transform:translateX(2px)}}
+@keyframes gs1{0%{clip-path:inset(10% 0 70% 0);transform:translateX(-6px)}15%{clip-path:inset(55% 0 20% 0);transform:translateX(5px)}30%{clip-path:inset(30% 0 50% 0);transform:translateX(-3px)}45%{clip-path:inset(80% 0 5% 0);transform:translateX(8px)}60%{clip-path:inset(0 0 85% 0);transform:translateX(-4px)}75%{clip-path:inset(40% 0 35% 0);transform:translateX(3px)}100%{clip-path:inset(50% 0 50% 0);transform:none}}
+@keyframes gs2{0%{clip-path:inset(65% 0 10% 0);transform:translateX(5px)}15%{clip-path:inset(5% 0 75% 0);transform:translateX(-7px)}30%{clip-path:inset(45% 0 30% 0);transform:translateX(4px)}45%{clip-path:inset(20% 0 60% 0);transform:translateX(-5px)}60%{clip-path:inset(70% 0 0 0);transform:translateX(6px)}75%{clip-path:inset(15% 0 70% 0);transform:translateX(-2px)}100%{clip-path:inset(50% 0 50% 0);transform:none}}
+.rot.hot,.scr.hot{opacity:1}
+.glitch .rot.hot{color:var(--r)}
+
+/* 上方：PTT 藍色標題列 */
+.top{position:sticky;top:0;z-index:5;margin:0 -14px 12px;background:var(--blue);color:var(--hi);padding:2px 10px;display:flex;align-items:center;gap:6px;min-height:44px}
+.back{background:none;border:0;color:var(--hi);font-size:13px;padding:6px 2px;cursor:pointer;min-width:44px;min-height:40px;text-align:left}
+.back[hidden]{visibility:hidden;display:block}
+.acts{flex:1;display:flex;gap:1px;justify-content:center;font-size:12px}
+.acts i{font-style:normal;padding:0 1px;color:#7f8ad6}
+.acts i::before{content:"["}.acts i::after{content:"]"}
+.acts i.done{color:var(--y)}
+.acts i.now{color:#000;background:var(--g)}
+.acts i.pop{animation:pop .6s steps(3) both}
+@keyframes pop{0%,66%{background:var(--y);color:#000}}
+.actlabel{font-size:12px;color:var(--y);white-space:nowrap;min-width:52px;text-align:right}
+.stamp{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--y);color:var(--y);padding:4px 10px;font-size:13px;margin:0 0 6px;animation:in .5s steps(3) both}
+.stamp b{font-weight:400}
+.stamp b::before{content:"⊕"}
+
+main{flex:1;display:flex;flex-direction:column}
+.screen{animation:in .3s steps(3) both}
+@keyframes in{from{opacity:0}to{opacity:1}}
+
+h1{font-weight:700;font-size:clamp(26px,7.4vw,32px);line-height:1.35;margin:22px 0 16px;color:var(--hi);text-shadow:var(--chroma)}
+.lead{font-size:15px;line-height:1.85}
+.lead p{margin:0 0 10px}
+.lead p::before{content:"※ ";color:var(--y)}
+.muted{color:var(--muted)}
+.small{font-size:13px;line-height:1.7}
+.meta{list-style:none;padding:0;margin:0;font-size:14px;line-height:1.9}
+.meta li::before{content:"⊕ ";color:var(--c)}
+.box{position:relative;border:1px solid var(--c);padding:16px 12px 10px;margin:20px 0}
+.box>.bt{position:absolute;top:-.85em;left:10px;background:#000;color:var(--c);padding:0 4px;font-size:13px}
+.conn{font-size:12px;color:var(--muted);line-height:1.6}
+.conn .ok{color:var(--g)} .conn .bad{color:var(--r)}
+.banner{text-align:center;font-family:var(--latin);font-size:clamp(15px,5.2vw,22px);line-height:1;margin:20px 0 6px;white-space:pre;text-shadow:-1.5px 0 rgba(255,40,120,.55),1.5px 0 rgba(40,230,230,.5);overflow:hidden}
+
+/* 幕間 */
+.act{text-align:left;padding-top:3vh}
+.act .num{color:var(--g);font-size:13px;letter-spacing:.2em}
+.act h2{font-weight:700;font-size:30px;margin:4px 0 14px;color:var(--hi);text-shadow:var(--chroma)}
+.act .art{margin:4px 0 22px}
+.act blockquote{margin:0;border:1px solid var(--g);padding:18px 12px 14px;position:relative;font-size:15px;line-height:1.85;color:var(--c)}
+.act blockquote::before{content:"┤ 系統訊息 ├";position:absolute;top:-.85em;left:10px;background:#000;color:var(--g);padding:0 4px;font-size:12px}
+.act blockquote .muted{color:var(--muted)}
+
+/* 題目 */
+.q{margin-bottom:30px}
+.qt{font-size:17px;color:var(--hi);line-height:1.65;margin:8px 0 6px}
+.qt::before{content:"> ";color:var(--g)}
+.req{color:var(--y);font-size:12px;margin-left:6px;vertical-align:1px}
+.hint{color:var(--muted);font-size:13px;margin:0 0 12px;line-height:1.6}
+.opts{display:flex;flex-direction:column;margin:12px -14px 0;counter-reset:o}
+.opt{position:relative;display:flex;flex-wrap:wrap;align-items:baseline;gap:0 8px;text-align:left;background:transparent;border:0;padding:11px 14px 11px 2.6em;cursor:pointer;min-height:48px;color:var(--ink);counter-increment:o}
+.opt::before{content:"(" counter(o) ")";color:var(--muted);flex:none}
+.opt:hover:not(.on):not(:disabled){background:#121212}
+.opt.on{background:var(--g);color:#000}
+.opt.on::before{color:#000}
+.opt.on::after{content:"●";position:absolute;left:1em;top:11px}
+.opt.multi::before{content:"[ ]"}
+.opt.multi.on::before{content:"[*]"}
+.opt .ol{font-size:15px}
+.opt .os{font-size:12px;color:var(--muted);flex-basis:100%}
+.opt.on .os{color:#0e3d18}
+.opt:disabled{opacity:.3;cursor:not-allowed}
+.opt:focus-visible,.scale button:focus-visible,.grid .cells button:focus-visible,.btn:focus-visible,.back:focus-visible{outline:1px dashed var(--hi);outline-offset:-3px}
+.echo{font-size:12px;color:var(--muted);margin-top:8px}
+.echo .ok{color:var(--g)}
+
+.scale{display:flex;gap:4px;margin-top:12px}
+.scale button{flex:1;background:transparent;border:1px solid var(--line);height:46px;cursor:pointer;font-size:15px;padding:0;color:var(--ink)}
+.scale button.on{background:var(--g);color:#000;border-color:var(--g);font-weight:700}
+.ends{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px;gap:12px}
+.ends span:last-child{text-align:right}
+
+.links{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;margin:14px 0 6px}
+.links i{height:34px;background:#111;border:1px solid var(--line);position:relative;cursor:pointer}
+.links i.alive{background:var(--g);border-color:var(--g)}
+.links i.dead::after{content:"░";position:absolute;inset:0;display:grid;place-items:center;color:var(--faint);font-style:normal}
+.big{font-family:var(--latin);font-size:42px;color:var(--g);text-align:center;margin:6px 0 0;text-shadow:var(--chroma)}
+
+.grid .row{border:1px solid var(--line);padding:12px;margin-top:10px}
+.grid .row.on{border-color:#2f6b3a}
+.grid .st{font-size:14px;line-height:1.6;margin-bottom:10px;color:var(--hi)}
+.grid .cells{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.grid .cells button{background:transparent;border:1px solid var(--line);padding:6px 2px;font-size:12px;line-height:1.3;cursor:pointer;min-height:44px;color:var(--muted)}
+.grid .cells button.on{background:var(--g);border-color:var(--g);color:#000}
+
+input[type=text],input[type=email],textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-radius:0;color:var(--hi);font:inherit;font-size:16px;padding:12px 14px;margin-top:12px;outline:none;caret-color:var(--g)}
+input:focus,textarea:focus{border-color:var(--g)}
+::placeholder{color:#666}
+textarea{min-height:120px;resize:vertical;line-height:1.7}
+.check{display:flex;gap:12px;align-items:flex-start;margin-top:14px;cursor:pointer;font-size:15px;line-height:1.7}
+.check input{width:20px;height:20px;accent-color:var(--g);margin-top:4px;flex:none}
+.err{color:var(--r);font-size:14px;margin-top:10px;min-height:1em}
+
+/* 打字機：字還沒打完前，選項先藏起來 */
+.screen.typing .opts,.screen.typing .scale,.screen.typing .ends,.screen.typing .grid,.screen.typing .links,.screen.typing .big,.screen.typing input,.screen.typing textarea,.screen.typing .check,.screen.typing .bbs,.screen.typing .witness,.screen.typing .hint,.screen.typing .echo{visibility:hidden}
+
+/* 選項逐行印出：打字機打完後，提示、選項、量表一行一行「印」出來 */
+.screen.reveal :is(.hint,.opt,.scale button,.ends,.grid .row,.links i,.big,input,textarea,.check,.bbs,.witness,.echo){animation:printin .22s steps(5) both;animation-delay:calc(120ms + min(var(--i,0),14) * 70ms)}
+@keyframes printin{0%{opacity:0;clip-path:inset(0 100% 0 0)}1%{opacity:1}100%{opacity:1;clip-path:inset(0)}}
+/* 同一個畫面重新渲染（點選項、勾選）時不要再淡入一次 */
+.screen.still{animation:none}
+/* 單選後自動跳題：選中的閃兩下確認，其他選項暗下去 */
+.screen.picked .opt:not(.on){animation:dim .2s steps(2) both}
+@keyframes dim{to{opacity:.2}}
+.screen.picked .opt.on{animation:sel .4s steps(1) both}
+@keyframes sel{25%,75%{background:transparent;color:var(--g)}50%,100%{background:var(--g);color:#000}}
+
+/* 像素圖 */
+.px{font-family:"IBM Plex Mono",Consolas,"Courier New",monospace;line-height:1.08;letter-spacing:0;font-size:11px;text-shadow:-1px 0 rgba(255,40,120,.28),1px 0 rgba(40,230,230,.24);animation:pxin .55s steps(9) both}
+@keyframes pxin{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0)}}
+.screen.still .px{animation:none}
+pre.px.banner{font-size:clamp(9px,3.4vw,15px);line-height:1.08;margin:18px 0 8px}
+.side-art pre.px{font-size:clamp(8px,.82vw,12px)}
+.side-art.big pre.px{font-size:clamp(10px,1.1vw,16px)}
+.persona .emo pre.px{font-size:12px}
+
+/* 下方按鈕 */
+.nav{position:fixed;left:0;right:0;bottom:0;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:#000;border-top:1px solid #1d1d1d;display:flex;justify-content:center;z-index:5}
+.nav .inner{max-width:532px;width:100%}
+.btn{width:100%;background:var(--g);color:#000;border:0;border-radius:0;height:52px;font-size:16px;font-weight:700;cursor:pointer;letter-spacing:.04em}
+.btn::before{content:"▌ "}.btn::after{content:" ▐"}
+.btn:disabled{background:#161616;color:#5a5a5a;cursor:not-allowed}
+.btn.ghost{background:transparent;border:1px solid var(--c);color:var(--c)}
+.btn.ghost::before{content:"[ "}.btn.ghost::after{content:" ]"}
+
+/* 同意書 */
+.doc{position:relative;border:1px solid var(--c);padding:18px 14px 14px;font-size:14px;line-height:1.85;margin:20px 0}
+.doc::before{content:"┤ 入場須知 ├";position:absolute;top:-.85em;left:10px;background:#000;color:var(--c);padding:0 4px;font-size:13px}
+.doc h3{font-size:14px;color:var(--y);margin:14px 0 2px;font-weight:400}
+.doc h3::before{content:"※ "}
+.doc h3:first-child{margin-top:0}
+.doc p{margin:0}
+
+/* 題目內的 PTT 文章 */
+.bbs{font-size:12px;line-height:1.75;background:#000;border:1px solid var(--line);padding:10px 12px;margin:14px 0;overflow:hidden}
+.bbs .h{display:flex;gap:8px}
+.bbs .k{background:var(--blue);color:var(--hi);padding:0 5px}
+.bbs .v{color:var(--hi)}
+.bbs .hr{color:#444;white-space:nowrap;overflow:hidden}
+.bbs .lnk{color:var(--c);text-decoration:line-through;text-decoration-color:var(--r)}
+.bbs .tag404{background:var(--r);color:#000;margin-left:6px;padding:0 3px}
+.bbs .push{color:var(--hi);font-weight:700}.bbs .pid{color:var(--y)}
+.bbs .fade{opacity:.45}.bbs .fade2{opacity:.2}
+.witness{display:grid;place-items:center;margin:18px 0 6px}
+.witness span{border:3px double var(--r);color:var(--r);padding:14px 26px;font-size:20px;letter-spacing:.3em;animation:wp 1.6s steps(1) infinite}
+@keyframes wp{50%{background:var(--r);color:#000}}
+.flame{animation:blink 1.4s steps(1) infinite}
+
+/* 揭曉 */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:18px 0}
+.compare div{border:1px solid var(--line);padding:12px;text-align:center}
+.compare b{display:block;font-family:var(--latin);font-size:30px;color:var(--g);margin:4px 0;text-shadow:var(--chroma)}
+.compare .real b{color:var(--r)}
+
+/* 結果 */
+.persona{text-align:center;padding-top:6px}
+.persona .emo{display:flex;justify-content:center;margin:14px 0 6px}
+.persona h2{font-weight:700;font-size:40px;margin:6px 0 4px;color:var(--g);text-shadow:-2px 0 rgba(255,40,120,.6),2px 0 rgba(40,230,230,.55)}
+.persona p{font-size:15px;line-height:1.85;margin:12px 0 0;text-align:left;color:var(--hi)}
+.rar{display:block;margin-top:4px;font-size:13px;color:var(--y)}
+.rar b{color:var(--hi);font-weight:400}
+.story{margin:22px 0 0;color:var(--c);line-height:1.85;font-size:15px}
+.story::before{content:"※ 引述《你的作答》之銘言：";display:block;color:var(--y);font-size:13px;margin-bottom:2px}
+.sec{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--hi);margin:30px 0 10px}
+.sec::after{content:"";flex:1;border-top:1px solid var(--line)}
+.dimbars{font-family:var(--latin);font-size:14px;display:flex;flex-direction:column;gap:4px;max-width:420px;text-align:left}
+.dimbars div{display:grid;grid-template-columns:5.6em minmax(0,1fr) 2.2em;gap:6px}
+.dimbars div span:first-child{font-family:var(--mono)}
+.dimbars b{font-weight:400;text-align:right;color:var(--hi)}
+.stats{margin:18px 0}
+.stat{margin-bottom:16px}
+.stat .lbl{display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px}
+.stat .lbl span::before{content:"推 ";color:var(--hi);font-weight:700}
+.stat .lbl b{color:var(--y);font-weight:400}
+.bar{height:10px;background:repeating-linear-gradient(90deg,#262626 0 7px,transparent 7px 9px)}
+.bar i{display:block;height:100%;background:repeating-linear-gradient(90deg,var(--g) 0 7px,transparent 7px 9px);width:0;transition:width 1.2s steps(20)}
+.stat .say{font-size:13px;color:#c9c04a;margin-top:4px}
+.stat .say::before{content:": "}
+.iv{position:relative;border:1px solid var(--c);padding:20px 12px 12px;margin:30px 0}
+.iv::before{content:"┤ 站內信 (1) ├";position:absolute;top:-.85em;left:10px;background:#000;color:var(--c);padding:0 4px;font-size:13px}
+.iv h3{font-size:16px;color:var(--hi);margin:0 0 8px}
+.iv textarea{min-height:72px}
+.relics{display:flex;justify-content:center;gap:4px 8px;font-size:12px;margin-top:4px;flex-wrap:wrap;color:var(--y)}
+
+/* 告別人格證明（可存成圖片） */
+.card{background:#000;color:var(--ink);font-family:var(--mono);width:100%;max-width:340px;margin:10px auto 18px;padding:20px 18px 22px;font-size:13px;line-height:1.7;position:relative;border:3px double var(--g)}
+.card .c{text-align:center}
+.card .t{font-weight:700;font-size:20px;letter-spacing:.3em;margin:2px 0;color:var(--hi)}
+.card .dash{border-top:1px dashed #444;margin:12px 0}
+.card .kv{display:flex;justify-content:space-between}
+.card .kv span:last-child{color:var(--hi)}
+.card .pn{font-weight:700;font-size:26px;text-align:center;margin:6px 0 2px;color:var(--g)}
+.card .ep{text-align:center;font-size:15px;margin:4px 0;color:var(--y)}
+.card .foot{text-align:center;font-size:11px;color:#777}
+.card .dimbars{font-size:12px}
+.share{display:flex;gap:10px}
+.share .btn{font-size:15px}
+.note{font-size:12px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.7}
+footer{font-size:11px;color:#555;text-align:center;padding:30px 0 0}
+.spin{margin:22vh auto 12px;text-align:center;color:var(--g);font-family:var(--latin);font-size:30px;height:40px}
+.spin::before{content:"|";animation:sp .8s steps(1) infinite}
+@keyframes sp{0%{content:"|"}25%{content:"/"}50%{content:"-"}75%{content:"\\"}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- 平板／電腦版 ---------- */
+.cover-art{margin:0 auto}
+@media (min-width:600px) and (max-width:959px){ .wrap{max-width:640px} .nav .inner{max-width:608px} }
+#aside{display:none}
+.side-num{color:var(--g);letter-spacing:.2em;font-size:14px}
+.side-title{font-weight:700;font-size:clamp(32px,3.2vw,48px);line-height:1.3;margin:8px 0 0;color:var(--hi);text-shadow:var(--chroma)}
+.side-art{margin:28px 0}
+.side-art .ascii{font-size:clamp(13px,1.1vw,16px)}
+.side-art.big{margin:0 auto 8px}
+.side-art.big .ascii{font-size:clamp(15px,1.45vw,21px)}
+.side-lead{font-size:16px;line-height:1.95;color:var(--c);max-width:26em;border-left:1px solid var(--line);padding-left:14px}
+.side-sub{color:var(--muted);font-size:13px;line-height:1.8;margin-top:14px}
+.side-relics{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:32px;width:100%;max-width:440px}
+.sr{border:1px dashed #333;padding:8px 2px 6px;text-align:center}
+.sr span{display:block;font-size:20px;color:#444}
+.sr small{display:block;font-size:11px;color:#555;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sr.done{border:1px solid var(--y)}.sr.done span{color:var(--y)}.sr.done small{color:var(--muted)}
+.sr.now{border:1px solid var(--g);background:rgba(78,212,106,.08)}.sr.now span{color:var(--g)}
+.sr.pop{animation:pop .6s steps(3) both}
+.side-hint{margin-top:22px;font-size:12px;color:var(--muted)}
+.side-hint kbd{font-family:var(--latin);border:1px solid var(--line);padding:0 5px;color:var(--hi)}
+.side-card .card{margin:0 auto 16px}
+.side-inner{margin:auto 0;width:100%}
+#aside.center .side-inner{display:flex;flex-direction:column;align-items:center}
+@media (min-width:960px){
+  :root{--aside:clamp(420px,42vw,640px)}
+  .layout{display:grid;grid-template-columns:var(--aside) minmax(0,1fr);min-height:100vh}
+  #aside{display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;padding:76px clamp(36px,4vw,72px) 48px;background:#050505;border-right:1px solid #222}
+  #aside::before{content:"【告別式站】 bbs://farewell.404";position:absolute;top:0;left:0;right:0;background:var(--blue);color:var(--hi);font-size:13px;padding:0 16px;line-height:44px;white-space:nowrap;overflow:hidden;text-align:left}
+  #aside.center{align-items:center;text-align:center}
+  #aside.center .side-lead{margin:0 auto}
+  .wrap{max-width:none;width:100%;padding:0 0 150px}
+  .top{margin:0 0 12px;padding:2px 48px}
+  main,footer{width:100%;max-width:680px;margin-left:auto;margin-right:auto;padding-left:48px;padding-right:48px}
+  .top .acts{visibility:hidden}
+  main{padding-top:4vh}
+  .screen.is-cover{padding-top:4vh}
+  .nav{left:var(--aside);padding-left:48px;padding-right:48px}
+  .nav .inner{max-width:584px}
+  .m-only{display:none!important}
+  .qt{font-size:20px}
+  .opts{margin-left:0;margin-right:0}
+  .act{padding-top:8vh}
+  .act h2{font-size:38px}
+  .card{max-width:360px}
+}
+@media (min-width:960px) and (max-height:760px){ .side-art{margin:18px 0} .side-relics{margin-top:22px} }
+</style>
+</head>
+<body>
+<div id="demo" class="demo" hidden>預覽模式：尚未設定 Supabase，資料不會送出，百分比為示意值</div>
+<div class="layout">
+<aside id="aside" aria-hidden="true"></aside>
+<div class="wrap">
+  <div class="top" id="top">
+    <button class="back" id="back" hidden>[←]上一步</button>
+    <div class="acts" id="acts"></div>
+    <div class="actlabel" id="actlabel"></div>
+  </div>
+  <main id="app"></main>
+  <footer>bbs://farewell.404 ── 國立清華大學藝術學院學士班 · 「無聲的告別」數位消失研究</footer>
+</div>
+</div>
+<div class="nav" id="nav"><div class="inner"><button class="btn" id="next">下一步</button></div></div>
+
+<script>
+/* ================== 設定（部署前填這裡） ================== */
+const CONFIG = {
+  SUPABASE_URL: "https://lnsmunueivpttrsrubpy.supabase.co",
+  SUPABASE_ANON_KEY: "sb_publishable_2Lx1pwFkKU3QVk4qRGakXw_cM08IeUr",   // publishable key（可公開；secret key 絕不放這裡）
+  CONTACT_EMAIL: "",       // 同意書上的研究者聯絡信箱
+  RAFFLE: "7-ELEVEN 禮券抽獎",
+  RAFFLE_END: "10/31",   // 抽獎資格統計截止日
+  INTERVIEW: "研究者正在尋找不同世代的鄉民，進行約 30–60 分鐘的線上或面對面訪談，聊聊你經歷過的網路消失。",
+};
+/* ========================================================= */
+const DEMO = !CONFIG.SUPABASE_URL || !CONFIG.SUPABASE_ANON_KEY;
+if (DEMO) document.getElementById('demo').hidden = false;
+
+const LIKERT = ["非常不同意","有點不同意","普通","有點同意","非常同意"];
+const FREQ = ["從不","很少","偶爾","常常","總是"];
+
+/* ---------- 插圖（ASCII） ---------- */
+const A_ = (s, cls='') => `<pre class="ascii ${cls}" aria-hidden="true">${s}</pre>`;
+
+/* ---------- 像素圖（Claude Code 終端機風）：一格 = 兩個字元寬的方塊 ----------
+   代碼：大寫 = █ 實心、小寫 = ▓ 半調；W 白 G 灰 D 深灰 R 紅 Y 黃 O 橘 M 洋紅 C 青 N 綠
+         : = ▒ 灰點陣　. = ░ 暗點陣　, = ░ 黃光暈　* + = 會閃的星星　空白 = 透明 */
+const PXC = {
+  W:['██','#e6e6e6'], w:['▓▓','#e6e6e6'], G:['██','#9a9a9a'], g:['▓▓','#9a9a9a'],
+  D:['██','#565656'], d:['▓▓','#565656'], R:['██','var(--r)'], r:['▓▓','var(--r)'],
+  Y:['██','var(--y)'], y:['▓▓','var(--y)'], O:['██','#e8873a'], o:['▓▓','#e8873a'],
+  M:['██','var(--m)'], m:['▓▓','var(--m)'], C:['██','var(--c)'], c:['▓▓','var(--c)'],
+  N:['██','var(--g)'], n:['▓▓','var(--g)'], ':':['▒▒','#6b6b6b'], '.':['░░','#4a4a4a'], ',':['░░','#8a7d1e']
+};
+const STAR = ['* ','+ ','· ','  ','· ','+ '];
+function pxRows(rows, t=0){
+  return rows.map((r,y)=>{
+    let out='', run='', col=null;
+    const flush=()=>{ if(run){ out += col ? `<span class="pc" style="color:${col}">${run}</span>` : run; run=''; } };
+    [...r].forEach((ch,x)=>{
+      if (ch==='*'||ch==='+'){ flush(); col=null;
+        const s = STAR[(t + x*3 + y*5 + (ch==='+'?2:0)) % STAR.length];
+        out += `<span style="color:${ch==='*'?'#e6e6e6':'#8a8a8a'}">${s}</span>`; return; }
+      const p = PXC[ch]; const c = p ? p[1] : null; const s = p ? p[0] : '  ';
+      if (c!==col){ flush(); col=c; }
+      run += s;
+    });
+    flush(); return out;
+  }).join('\n');
+}
+const PXA = (name, cls='') => `<pre class="ascii px ${cls}" data-art="${name}" aria-hidden="true">${pxRows(PXF[name].f[0])}</pre>`;
+
+const PXF = {"banner":{"ms":260,"f":[["*         +      + "," M  M  MM  M  M    "," M: M:M :M M: M:   "," YYYY:Y: Y:YYYY:   ","  ::Y:Y: c: ::Y:  *","    C:C: C:   c:   ","    C: CC :   ..   ","+    :  ::    .:   ","     *          +  "],["*         +      + "," M  M  MM  M  M    "," M: M:M :M M: M:   "," YYYY:Y: Y:YYYY:   ","  ::Y:Y: c: ::Y:  *","    C:C: C:   c:   ","    C: CC :   ..   ","+    :  ::    .:   ","     *         .+  "],["*         +      + "," M  M  MM  M  M    "," M: M:M :M M: M:   "," YYYY:Y: Y:YYYY:   ","  ::Y:Y: c: ::Y:  *","    C:C: C:   c:   ","    C: CC :   ..   ","+    :  ::     :   ","     *         .+  "],["*         +      + "," M  M  MM  M  M    "," M: M:M :M M: M:   "," YYYY:Y: Y:YYYY:   ","  ::Y:Y: c: ::Y:  *","    C:C: C:   c:   ","    C: CC :   ..   ","+    :  ::     :   ","     *          +  "],["*         +      + "," M  M  MM  M  M    "," M: M:M :M M: M:   "," YYYY:Y: Y:YYYY:   ","  ::Y:Y: c: ::Y:  *","    C:C: C:   c:   ","    C: CC :   ..   ","+    :  ::     :   ","     *          +  "],["*         +      + "," M  M  MM  M  M    "," M: M:M :M M: M:   "," YYYY:Y: Y:YYYY:   ","  ::Y:Y: c: ::Y:  *","    C:C: C:   c:   ","    C: CC :   ..   ","+    :  ::     :   ","     *          +  "]]},"guestbook":{"ms":230,"f":[["                      ","wWWWWWWWWWDWWWWnWWWWw "," WddDddDdWDWDdNDddWW  "," WWWWWWWWWDWWNWWWWWW  "," WDddDdWWWDWYWWWWWWW  "," WWWWWWWWWDWWWWWWWWW  "," WWDddDdWWDWWWWWWWWW  "," WWWWWWWWWDWWWWWWWWW  ","GGGGGGGGGGGGGGGGGGGGG "," :::::::::::::::::::: ","                      "],["                      ","wWWWWWWWWWDWWWWWnWWWw "," WddDddDdWDWDddNddWW  "," WWWWWWWWWDWWWNWWWWW  "," WDddDdWWWDWDYWWWWWW  "," WWWWWWWWWDWWWWWWWWW  "," WWDddDdWWDWWWWWWWWW  "," WWWWWWWWWDWWWWWWWWW  ","GGGGGGGGGGGGGGGGGGGGG "," :::::::::::::::::::: ","                      "],["                      ","wWWWWWWWWWDWWWWWWnWWw "," WddDddDdWDWDddDNdWW  "," WWWWWWWWWDWWWWNWWWW  "," WDddDdWWWDWDdYWWWWW  "," WWWWWWWWWDWWWWWWWWW  "," WWDddDdWWDWWWWWWWWW  "," WWWWWWWWWDWWWWWWWWW  ","GGGGGGGGGGGGGGGGGGGGG "," :::::::::::::::::::: ","                      "],["                      ","wWWWWWWWWWDWWWWWWWnWw "," WddDddDdWDWDddDdNWW  "," WWWWWWWWWDWWWWWNWWW  "," WDddDdWWWDWDddYWWWW  "," WWWWWWWWWDWWWWWWWWW  "," WWDddDdWWDWWWWWWWWW  "," WWWWWWWWWDWWWWWWWWW  ","GGGGGGGGGGGGGGGGGGGGG "," :::::::::::::::::::: ","                      "],["                      ","wWWWWWWWWWDWWWWWWWWnw "," WddDddDdWDWDddDddNW  "," WWWWWWWWWDWWWWWWNWW  "," WDddDdWWWDWDddDYWWW  "," WWWWWWWWWDWWWWWWWWW  "," WWDddDdWWDWWWWWWWWW  "," WWWWWWWWWDWWWWWWWWW  ","GGGGGGGGGGGGGGGGGGGGG "," :::::::::::::::::::: ","                      "],["                      ","wWWWWWWWWWDWWWWWWWWWn "," WddDddDdWDWDddDddWN  "," WWWWWWWWWDWWWWWWWNW  "," WDddDdWWWDWDddDdYWW  "," WWWWWWWWWDWWWWWWWWW  "," WWDddDdWWDWWWWWWWWW  "," WWWWWWWWWDWWWWWWWWW  ","GGGGGGGGGGGGGGGGGGGGG "," :::::::::::::::::::: ","                      "],["                      ","wWWWWWWWWWDWWWWWWWWWwn"," WddDddDdWDWDddDddWWN "," WWWWWWWWWDWWWWWWWWN  "," WDddDdWWWDWDddDddYW  "," WWWWWWWWWDWWWWWWWWW  "," WWDddDdWWDWWWWWWWWW  "," WWWWWWWWWDWWWWWWWWW  ","GGGGGGGGGGGGGGGGGGGGG "," :::::::::::::::::::: ","                      "],["                     n","wWWWWWWWWWDWWWWWWWWWN "," WddDddDdWDWDddDddWN  "," WWWWWWWWWDWWWWWWWYW  "," WDddDdWWWDWDddDddWW  "," WWWWWWWWWDWWWWWWWWW  "," WWDddDdWWDWWWWWWWWW  "," WWWWWWWWWDWWWWWWWWW  ","GGGGGGGGGGGGGGGGGGGGG "," :::::::::::::::::::: ","                      "],["                     n","wWWWWWWWWWDWWWWWWWWWN "," WddDddDdWDWDddDddWN  "," WWWWWWWWWDWWWWWWWYW  "," WDddDdWWWDWDddDddWW  "," WWWWWWWWWDWWWWWWWWW  "," WWDddDdWWDWWWWWWWWW  "," WWWWWWWWWDWWWWWWWWW  ","GGGGGGGGGGGGGGGGGGGGG "," :::::::::::::::::::: ","                      "],["                     n","wWWWWWWWWWDWWWWWWWWWN "," WddDddDdWDWDddDddWN  "," WWWWWWWWWDWWWWWWWYW  "," WDddDdWWWDWDddDddWW  "," WWWWWWWWWDWWWWWWWWW  "," WWDddDdWWDWWWWWWWWW  "," WWWWWWWWWDWWWWWWWWW  ","GGGGGGGGGGGGGGGGGGGGG "," :::::::::::::::::::: ","                      "],["               n      ","wWWWWWWWWWDWWWNWWWWWw "," WddDddDdWDWDNdDddWW  "," WWWWWWWWWDWYWWWWWWW  "," WDddDdWWWDWWWWWWWWW  "," WWWWWWWWWDWWWWWWWWW  "," WWDddDdWWDWWWWWWWWW  "," WWWWWWWWWDWWWWWWWWW  ","GGGGGGGGGGGGGGGGGGGGG "," :::::::::::::::::::: ","                      "],["               n      ","wWWWWWWWWWDWWWNWWWWWw "," WddDddDdWDWDNdDddWW  "," WWWWWWWWWDWYWWWWWWW  "," WDddDdWWWDWWWWWWWWW  "," WWWWWWWWWDWWWWWWWWW  "," WWDddDdWWDWWWWWWWWW  "," WWWWWWWWWDWWWWWWWWW  ","GGGGGGGGGGGGGGGGGGGGG "," :::::::::::::::::::: ","                      "]]},"dead":{"ms":240,"f":[["GRGYGNGGGGGGGGGGGGGGGG","G :cc::::::::::::::: G","G                    G","G                    G","G         Cc         G","G                    G","G   ..............   G","G                    G","G                    G","G                    G","G                    G","GGGGGGGGGGGGGGGGGGGGGG"],["GRGYGNGGGGGGGGGGGGGGGG","G :cc::::::::::::::: G","G                    G","G                    G","G         cC         G","G                    G","G   CC............   G","G                    G","G                    G","G                    G","G                    G","GGGGGGGGGGGGGGGGGGGGGG"],["GRGYGNGGGGGGGGGGGGGGGG","G :cc::::::::::::::: G","G                    G","G                    G","G         Cc         G","G                    G","G   CCCC..........   G","G                    G","G                    G","G                    G","G                    G","GGGGGGGGGGGGGGGGGGGGGG"],["GRGYGNGGGGGGGGGGGGGGGG","G :cc::::::::::::::: G","G                    G","G                    G","G         cC         G","G                    G","G   CCCCCC........   G","G                    G","G                    G","G                    G","G                    G","GGGGGGGGGGGGGGGGGGGGGG"],["GRGYGNGGGGGGGGGGGGGGGG","G :cc::::::::::::::: G","G                    G","G                    G","G         Cc         G","G                    G","G   CCCCCCCC......   G","G                    G","G                    G","G                    G","G                    G","GGGGGGGGGGGGGGGGGGGGGG"],["GRGYGNGGGGGGGGGGGGGGGG","G :cc::::::::::::::: G","G                    G","G                    G","G         cC         G","G                    G","G   CCCCCCCCCC....   G","G                    G","G                    G","G                    G","G                    G","GGGGGGGGGGGGGGGGGGGGGG"],["GRGYGNGGGGGGGGGGGGGGGG","G :cc::::::::::::::: G","G                    G","G                    G","G         Cc         G","G                    G","G   CCCCCCCCCCCC..   G","G                    G","G                    G","G                    G","G                    G","GGGGGGGGGGGGGGGGGGGGGG"],["GRGYGNGGGGGGGGGGGGGGGG","G :cc::::::::::::::: G","G                    G","G                    G","G         cC         G","G                    G","G   CCCCCCCCCCCCCC   G","G                    G","G                    G","G                    G","G                    G","GGGGGGGGGGGGGGGGGGGGGG"],["GRGYGNGGGGGGGGGGGGGGGG","G :cc::::::::::::::: G","G                    G","G     R R    R R     G","G      R      R      G","G     R R    R R     G","G                    G","G       r r r        G","G        r r r       G","G                    G","G                    G","GGGGGGGGGGGGGGGGGGGGGG"],["GRGYGNGGGGGGGGGGGGGGGG","G :cc::::::::::::::: G","G                    G","G     r r    r r     G","G      r      r      G","G     r r    r r     G","G                    G","G       r r r        G","G        r r r       G","G                    G","G                    G","GGGGGGGGGGGGGGGGGGGGGG"],["GRGYGNGGGGGGGGGGGGGGGG","G :cc::::::::::::::: G","G                    G","G      R R    R R    G","G       R      R     G","G      R R    R R    G","G                    G","G        r r r       G","G         r r r      G","G                    G","G                    G","GGGGGGGGGGGGGGGGGGGGGG"],["GRGYGNGGGGGGGGGGGGGGGG","G :cc::::::::::::::: G","G                    G","G     R R    R R     G","G      R      R      G","G     R R    R R     G","G                    G","G       r r r        G","G        r r r       G","G                    G","G                    G","GGGGGGGGGGGGGGGGGGGGGG"],["GRGYGNGGGGGGGGGGGGGGGG","G :cc::::::::::::::: G","G                    G","G     r r    r r     G","G      r      r      G","G     r r    r r     G","G                    G","G       r r r        G","G        r r r       G","G                    G","G                    G","GGGGGGGGGGGGGGGGGGGGGG"],["GRGYGNGGGGGGGGGGGGGGGG","G :cc::::::::::::::: G","G                    G","G     R R    R R     G","G      R      R      G","G     R R    R R     G","G                    G","G       r r r        G","G        r r r       G","G                    G","G                    G","GGGGGGGGGGGGGGGGGGGGGG"],["GRGYGNGGGGGGGGGGGGGGGG","G :cc::::::::::::::: G","G                    G","G     R R    R R     G","G      R      R      G","G     R R    R R     G","G                    G","G       r r r        G","G        r r r       G","G                    G","G                    G","GGGGGGGGGGGGGGGGGGGGGG"]]},"relics":{"ms":420,"f":[[" GGGGGDDDGGGGG "," G           G ",":GCCY MMW YYRG:",":GCCC MMM YYYG:",":GNNN mmm yyyG:",":G           G:",":GccW NNY RRWG:",":Gccc NNN RRRG:",":GCCC nnn rrrG:",":G           G:",":GCCW yyM MMCG:",":GCCC yyy MMMG:",":GGGG YYY NNNG:",":G           G:"," G           G "," GGGGGGDGGGGGG "],[" GGGGGDDDGGGGG "," G           G ",":GCCY MMW YYRG:",":GCCC MMM YYYG:",":GNNN mmm yyyG:",":G           G:",":GccW NNY RRWG:",":Gccc NNN RRRG:",":GCCC nnn rrrG:",":G           G:",":GCCW yyM MMCG:",":GCCC yyy MMMG:",":GGGG YYY NNNG:",":G           G:"," G           G "," GGGGGGDGGGGGG "],[" GGGGGDDDGGGGG "," G           G ",":GCCY MMW YYRG:",":GCCC MMM YYYG:",":GNNN mmm yyyG:",":G           G:",":GccW NNY RRWG:",":Gccc NNN RRRG:",":GCCC nnn rrrG:",":G           G:",":GCCW yyM MMCG:",":GCCC yyy MMMG:",":GGGG YYY NNNG:",":G           G:"," G           G "," GGGGGGDGGGGGG "],[" GGGGGDDDGGGGG "," G           G ",":GCCY MMW YYRG:",":GCCC MMM YYYG:",":GNNN mmm yyyG:",":G           G:",":GccW ::: RRWG:",":Gccc ::: RRRG:",":GCCC ::: rrrG:",":G           G:",":GCCW yyM MMCG:",":GCCC yyy MMMG:",":GGGG YYY NNNG:",":G           G:"," G           G "," GGGGGGDGGGGGG "],[" GGGGGDDDGGGGG "," G           G ",":G::: MMW YYRG:",":G::: MMM YYYG:",":G::: mmm yyyG:",":G           G:",":GccW . . RRWG:",":Gccc  .  RRRG:",":GCCC . . rrrG:",":G           G:",":GCCW yyM MMCG:",":GCCC yyy MMMG:",":GGGG YYY NNNG:",":G           G:"," G           G "," GGGGGGDGGGGGG "],[" GGGGGDDDGGGGG "," G           G ",":G. . MMW YYRG:",":G .  MMM YYYG:",":G. . mmm yyyG:",":G           G:",":GccW . . RRWG:",":Gccc  .  RRRG:",":GCCC . . rrrG:",":G           G:",":GCCW ::: MMCG:",":GCCC ::: MMMG:",":GGGG ::: NNNG:",":G           G:"," G           G "," GGGGGGDGGGGGG "],[" GGGGGDDDGGGGG "," G           G ",":G. . MMW :::G:",":G .  MMM :::G:",":G. . mmm :::G:",":G           G:",":GccW . . RRWG:",":Gccc  .  RRRG:",":GCCC . . rrrG:",":G           G:",":GCCW . . MMCG:",":GCCC  .  MMMG:",":GGGG . . NNNG:",":G           G:"," G           G "," GGGGGGDGGGGGG "],[" GGGGGDDDGGGGG "," G           G ",":G. . MMW . .G:",":G .  MMM  . G:",":G. . mmm . .G:",":G           G:",":GccW . . RRWG:",":Gccc  .  RRRG:",":GCCC . . rrrG:",":G           G:",":GCCW . . :::G:",":GCCC  .  :::G:",":GGGG . . :::G:",":G           G:"," G           G "," GGGGGGDGGGGGG "],[" GGGGGDDDGGGGG "," G           G ",":G. . MMW . .G:",":G .  MMM  . G:",":G. . mmm . .G:",":G           G:",":GccW . . :::G:",":Gccc  .  :::G:",":GCCC . . :::G:",":G           G:",":GCCW . . . .G:",":GCCC  .   . G:",":GGGG . . . .G:",":G           G:"," G           G "," GGGGGGDGGGGGG "],[" GGGGGDDDGGGGG "," G           G ",":G. . ::: . .G:",":G .  :::  . G:",":G. . ::: . .G:",":G           G:",":GccW . . . .G:",":Gccc  .   . G:",":GCCC . . . .G:",":G           G:",":GCCW . . . .G:",":GCCC  .   . G:",":GGGG . . . .G:",":G           G:"," G           G "," GGGGGGDGGGGGG "],[" GGGGGDDDGGGGG "," G           G ",":G. . . . . .G:",":G .   .   . G:",":G. . . . . .G:",":G           G:",":GccW . . . .G:",":Gccc  .   . G:",":GCCC . . . .G:",":G           G:",":G::: . . . .G:",":G:::  .   . G:",":G::: . . . .G:",":G           G:"," G           G "," GGGGGGDGGGGGG "],[" GGGGGDDDGGGGG "," G           G ",":G. . . . . .G:",":G .   .   . G:",":G. . . . . .G:",":G           G:",":G::: . . . .G:",":G:::  .   . G:",":G::: . . . .G:",":G           G:",":G. . . . . .G:",":G .   .   . G:",":G. . . . . .G:",":G           G:"," G           G "," GGGGGGDGGGGGG "],[" GGGGGDDDGGGGG "," G           G ",":G. . . . . .G:",":G .   .   . G:",":G. . . . . .G:",":G           G:",":G. . . . . .G:",":G .   .   . G:",":G. . . . . .G:",":G           G:",":G. . . . . .G:",":G .   .   . G:",":G. . . . . .G:",":G           G:"," G           G "," GGGGGGDGGGGGG "],[" GGGGGDDDGGGGG "," G           G ",":G. . . . . .G:",":G .   .   . G:",":G. . . . . .G:",":G           G:",":G. . . . . .G:",":G .   .   . G:",":G. . . . . .G:",":G           G:",":G. . . . . .G:",":G .   .   . G:",":G. . . . . .G:",":G           G:"," G           G "," GGGGGGDGGGGGG "],[" GGGGGDDDGGGGG "," G           G ",":G. . . . . .G:",":G .   .   . G:",":G. . . . . .G:",":G           G:",":G. . . . . .G:",":G .   .   . G:",":G. . . . . .G:",":G           G:",":G. . . . . .G:",":G .   .   . G:",":G. . . . . .G:",":G           G:"," G           G "," GGGGGGDGGGGGG "],[" GGGGGDDDGGGGG "," G           G ",":G. . . . . .G:",":G .   .   . G:",":G. . . . . .G:",":G           G:",":G. . . . . .G:",":G .   .   . G:",":G. . . . . .G:",":G           G:",":G. . . . . .G:",":G .   .   . G:",":G. . . . . .G:",":G           G:"," G           G "," GGGGGGDGGGGGG "]]},"candle":{"ms":170,"f":[["       ,       ","       y       "," *    ,Y,      ","      YWY      ","     ,YOY,   + ","      YOY      ","+      D       ","     WwWwG     ","    WwWWWG     ","    wWWWWG     ","  +  WWWWG     ","     WWWWG     ","     WWWWG   * ","     WWWWG     ","     WWWWG     ","  GGGGGGGGGGG  ","   :::::::::   "],["       ,       ","       y       "," *    ,Y,      ","      YWY      ","     ,YOY,   + ","      YOY      ","+      D       ","     WwWwG     ","    WwWWWG     ","    wWWWWG     ","  +  WWWWG     ","     WWWWG     ","     WWWWG   * ","     WWWWG     ","     WWWWG     ","  GGGGGGGGGGG  ","   :::::::::   "],["      ,        ","      y        "," *    Y,       ","     ,YWY      ","     ,YOY,   + ","      YOY      ","+      D       ","     WwWwG     ","    WwWWWG     ","    wWWWWG     ","  +  WWWWG     ","     WWWWG     ","     WWWWG   * ","     WWWWG     ","     WWWWG     ","  GGGGGGGGGGG  ","   :::::::::   "],["       ,       ","       y       "," *    ,Y,      ","      YWY      ","     ,YOY,   + ","      YOY      ","+      D       ","     WwWwG     ","    WwWWWG     ","    wWWWWG     ","  +  WWWWG     ","     WWWWG     ","     WWWWG   * ","     WWWWG     ","     WWWWG     ","  GGGGGGGGGGG  ","   :::::::::   "],["        ,      ","        y      "," *     ,Y      ","       YWY     ","     ,YOY,   + ","      YOY      ","+      D       ","     WwWwG     ","    WwWWWG     ","    wWWWWG     ","  +  WWWWG     ","     WWWWG     ","     WWWWG   * ","     WWWWG     ","     WWWWG     ","  GGGGGGGGGGG  ","   :::::::::   "],["       ,       ","       y       "," *    ,Y,      ","      YWY      ","     ,YOY,   + ","      YOY      ","+      D       ","     WwWwG     ","    WwWWWG     ","    wWWWWG     ","  +  WWWWG     ","     WWWWG     ","     WWWWG   * ","     WWWWG     ","     WWWWG     ","  GGGGGGGGGGG  ","   :::::::::   "],["      ,        ","      y        "," *    Y,       ","     ,YWY      ","     ,YOY,   + ","      YOY      ","+      D       ","     WwWwG     ","    WwWWWG     ","    wWWWWG     ","  +  WWWWG     ","     WWWWG     ","     WWWWG   * ","     WWWWG     ","     WWWWG     ","  GGGGGGGGGGG  ","   :::::::::   "],["       ,       ","       y       "," *    ,Y,      ","      YWY      ","     ,YOY,   + ","      YOY      ","+      D       ","     WwWwG     ","    WwWWWG     ","    wWWWWG     ","  +  WWWWG     ","     WWWWG     ","     WWWWG   * ","     WWWWG     ","     WWWWG     ","  GGGGGGGGGGG  ","   :::::::::   "],["       ,       ","       y       "," *    ,Y,      ","      YWY      ","     ,YOY,   + ","      YOY      ","+      D       ","     WwWwG     ","    WwWWWG     ","    wWWWWG     ","  +  WWWWG     ","     WWWWG     ","     WWWWG   * ","     WWWWG     ","     WWWWG     ","  GGGGGGGGGGG  ","   :::::::::   "],["        ,      ","        y      "," *     ,Y      ","       YWY     ","     ,YOY,   + ","      YOY      ","+      D       ","     WwWwG     ","    WwWWWG     ","    wWWWWG     ","  +  WWWWG     ","     WWWWG     ","     WWWWG   * ","     WWWWG     ","     WWWWG     ","  GGGGGGGGGGG  ","   :::::::::   "]]},"flower":{"ms":330,"f":[["       W W       ","+    W wWw W     ","    WwWWWWWwW    ","    WWWyYyWWW   *","    wWWYYYWWw    ","    WWWyYyWWW    ","    WwWWWWWwWw   ","     W wWw W     ","       W W       ","        N        "," *      N        ","        N      + ","      nNN n      ","        NNn      ","        N        ","        N        ","     :::::::     "],["       W W       ","+    W wWw W     ","    WwWWWWWwW    ","    WWWyYyWWW   *","    wWWYYYWWw    ","    WWWyYyWWW    ","    WwWWWWWwW    ","     W wWw W w   ","       W W       ","        N        "," *      N        ","        N      + ","      nNN n      ","        NNn      ","        N        ","        N        ","     :::::::     "],["        W W      ","+     W wWw W    ","     WwWWWWWwW   ","     WWWyYyWWW  *","     wWWYYYWWw   ","     WWWyYyWWW   ","     WwWWWWWwW   ","      W wWw W    ","        W W   w  ","         N       "," *       N       ","        N      + ","      nNN n      ","        NNn      ","        N        ","        N        ","     :::::::     "],["        W W      ","+     W wWw W    ","     WwWWWWWwW   ","     WWWyYyWWW  *","     wWWYYYWWw   ","     WWWyYyWWW   ","     WwWWWWWwW   ","      W wWw W    ","        W W      ","         N    w  "," *       N       ","        N      + ","      nNN n      ","        NNn      ","        N        ","        N        ","     :::::::     "],["       W W       ","+    W wWw W     ","    WwWWWWWwW    ","    WWWyYyWWW   *","    wWWYYYWWw    ","    WWWyYyWWW    ","    WwWWWWWwW    ","     W wWw W     ","       W W       ","        N        "," *      N    w   ","        N      + ","      nNN n      ","        NNn      ","        N        ","        N        ","     :::::::     "],["       W W       ","+    W wWw W     ","    WwWWWWWwW    ","    WWWyYyWWW   *","    wWWYYYWWw    ","    WWWyYyWWW    ","    WwWWWWWwW    ","     W wWw W     ","       W W       ","        N        "," *      N        ","        N    w + ","      nNN n      ","        NNn      ","        N        ","        N        ","     :::::::     "],["      W W        ","+   W wWw W      ","   WwWWWWWwW     ","   WWWyYyWWW    *","   wWWYYYWWw     ","   WWWyYyWWW     ","   WwWWWWWwW     ","    W wWw W      ","      W W        ","       N         "," *      N        ","        N      + ","      nNN n   w  ","        NNn      ","        N        ","        N        ","     :::::::     "],["      W W        ","+   W wWw W      ","   WwWWWWWwW     ","   WWWyYyWWW    *","   wWWYYYWWw     ","   WWWyYyWWW     ","   WwWWWWWwW     ","    W wWw W      ","      W W        ","       N         "," *      N        ","        N      + ","      nNN n      ","        NNn   w  ","        N        ","        N        ","     :::::::     "],["       W W       ","+    W wWw W     ","    WwWWWWWwW    ","    WWWyYyWWW   *","    wWWYYYWWw    ","    WWWyYyWWW    ","    WwWWWWWwW    ","     W wWw W     ","       W W       ","        N        "," *      N        ","        N      + ","      nNN n      ","        NNn      ","        N    w   ","        N        ","     :::::::     "],["       W W       ","+    W wWw W     ","    WwWWWWWwW    ","    WWWyYyWWW   *","    wWWYYYWWw    ","    WWWyYyWWW    ","    WwWWWWWwW    ","     W wWw W     ","       W W       ","        N        "," *      N        ","        N      + ","      nNN n      ","        NNn      ","        N        ","        N    w   ","     :::::::     "],["       W W       ","+    W wWw W     ","    WwWWWWWwW    ","    WWWyYyWWW   *","    wWWYYYWWw    ","    WWWyYyWWW    ","    WwWWWWWwW    ","     W wWw W     ","       W W       ","        N        "," *      N        ","        N      + ","      nNN n      ","        NNn      ","        N        ","        N        ","     :::::::     "],["       W W       ","+    W wWw W     ","    WwWWWWWwW    ","    WWWyYyWWW   *","    wWWYYYWWw    ","    WWWyYyWWW    ","    WwWWWWWwW    ","     W wWw W     ","       W W       ","        N        "," *      N        ","        N      + ","      nNN n      ","        NNn      ","        N        ","        N        ","     :::::::     "]]},"card":{"ms":200,"f":[[" GGGGGGGGGGGGGG ","GGGGGGGGGGGGGDGG","GG::::::::::::GG","GGGGGGGGGGGGGGGG"," DDDDDDDDDDDDDD ","                ","                ","                ","                ","                ","                ","                ","                ","                ","                "],[" GGGGGGGGGGGGGG ","GGGGGGGGGGGGGNGG","GG::::::::::::GG","GGGGGGGGGGGGGGGG"," DDDDDDDDDDDDDD ","                ","                ","                ","                ","                ","                ","                ","                ","                ","                "],[" GGGGGGGGGGGGGG ","GGGGGGGGGGGGGNGG","GG::::::::::::GG","GGGGGGGGGGGGGGGG"," DDDDDDDDDDDDDD ","   wW wW wW w   ","                ","                ","                ","                ","                ","                ","                ","                ","                "],[" GGGGGGGGGGGGGG ","GGGGGGGGGGGGGDGG","GG::::::::::::GG","GGGGGGGGGGGGGGGG"," DDDDDDDDDDDDDD ","   WdddddWWWW   ","   wW wW wW w   ","                ","                ","                ","                ","                ","                ","                ","                "],[" GGGGGGGGGGGGGG ","GGGGGGGGGGGGGNGG","GG::::::::::::GG","GGGGGGGGGGGGGGGG"," DDDDDDDDDDDDDD ","   WddddWdddW   ","   WdddddWWWW   ","   wW wW wW w   ","                ","                ","                ","                ","                ","                ","                "],[" GGGGGGGGGGGGGG ","GGGGGGGGGGGGGDGG","GG::::::::::::GG","GGGGGGGGGGGGGGGG"," DDDDDDDDDDDDDD ","   WWWWWWWWWW   ","   WddddWdddW   ","   WdddddWWWW   ","   wW wW wW w   ","                ","                ","                ","                ","                ","                "],[" GGGGGGGGGGGGGG ","GGGGGGGGGGGGGNGG","GG::::::::::::GG","GGGGGGGGGGGGGGGG"," DDDDDDDDDDDDDD ","   WMMMMMMMMW   ","   WWWWWWWWWW   ","   WddddWdddW   ","   WdddddWWWW   ","   wW wW wW w   ","                ","                ","                ","                ","                "],[" GGGGGGGGGGGGGG ","GGGGGGGGGGGGGDGG","GG::::::::::::GG","GGGGGGGGGGGGGGGG"," DDDDDDDDDDDDDD ","   WMYYYYYYMW   ","   WMMMMMMMMW   ","   WWWWWWWWWW   ","   WddddWdddW   ","   WdddddWWWW   ","   wW wW wW w   ","                ","                ","                ","                "],[" GGGGGGGGGGGGGG ","GGGGGGGGGGGGGNGG","GG::::::::::::GG","GGGGGGGGGGGGGGGG"," DDDDDDDDDDDDDD ","   WMMMMMMMMW   ","   WMYYYYYYMW   ","   WMMMMMMMMW   ","   WWWWWWWWWW   ","   WddddWdddW   ","   WdddddWWWW   ","   wW wW wW w   ","                ","                ","                "],[" GGGGGGGGGGGGGG ","GGGGGGGGGGGGGDGG","GG::::::::::::GG","GGGGGGGGGGGGGGGG"," DDDDDDDDDDDDDD ","   WWWWWWWWWW   ","   WMMMMMMMMW   ","   WMYYYYYYMW   ","   WMMMMMMMMW   ","   WWWWWWWWWW   ","   WddddWdddW   ","   WdddddWWWW   ","   wW wW wW w   ","                ","                "],[" GGGGGGGGGGGGGG ","GGGGGGGGGGGGGNGG","GG::::::::::::GG","GGGGGGGGGGGGGGGG"," DDDDDDDDDDDDDD ","   WddddddWWW   ","   WWWWWWWWWW   ","   WMMMMMMMMW   ","   WMYYYYYYMW   ","   WMMMMMMMMW   ","   WWWWWWWWWW   ","   WddddWdddW   ","   WdddddWWWW   ","   wW wW wW w   ","                "],[" GGGGGGGGGGGGGG ","GGGGGGGGGGGGGDGG","GG::::::::::::GG","GGGGGGGGGGGGGGGG"," DDDDDDDDDDDDDD ","   WWWWWWWWWW   ","   WddddddWWW   ","   WWWWWWWWWW   ","   WMMMMMMMMW   ","   WMYYYYYYMW   ","   WMMMMMMMMW   ","   WWWWWWWWWW   ","   WddddWdddW   ","   WdddddWWWW   ","   wW wW wW w   "],[" GGGGGGGGGGGGGG ","GGGGGGGGGGGGGDGG","GG::::::::::::GG","GGGGGGGGGGGGGGGG"," DDDDDDDDDDDDDD ","   WWWWWWWWWW   ","   WddddddWWW   ","   WWWWWWWWWW   ","   WMMMMMMMMW   ","   WMYYYYYYMW   ","   WMMMMMMMMW   ","   WWWWWWWWWW   ","   WddddWdddW   ","   WdddddWWWW   ","   wW wW wW w   "],[" GGGGGGGGGGGGGG ","GGGGGGGGGGGGGNGG","GG::::::::::::GG","GGGGGGGGGGGGGGGG"," DDDDDDDDDDDDDD ","   WWWWWWWWWW   ","   WddddddWWW   ","   WWWWWWWWWW   ","   WMMMMMMMMW   ","   WMYYYYYYMW   ","   WMMMMMMMMW   ","   WWWWWWWWWW   ","   WddddWdddW   ","   WdddddWWWW   ","   wW wW wW w   "],[" GGGGGGGGGGGGGG ","GGGGGGGGGGGGGDGG","GG::::::::::::GG","GGGGGGGGGGGGGGGG"," DDDDDDDDDDDDDD ","   WWWWWWWWWW   ","   WddddddWWW   ","   WWWWWWWWWW   ","   WMMMMMMMMW   ","   WMYYYYYYMW   ","   WMMMMMMMMW   ","   WWWWWWWWWW   ","   WddddWdddW   ","   WdddddWWWW   ","   wW wW wW w   "],[" GGGGGGGGGGGGGG ","GGGGGGGGGGGGGNGG","GG::::::::::::GG","GGGGGGGGGGGGGGGG"," DDDDDDDDDDDDDD ","   WWWWWWWWWW   ","   WddddddWWW   ","   WWWWWWWWWW   ","   WMMMMMMMMW   ","   WMYYYYYYMW   ","   WMMMMMMMMW   ","   WWWWWWWWWW   ","   WddddWdddW   ","   WdddddWWWW   ","   wW wW wW w   "],[" GGGGGGGGGGGGGG ","GGGGGGGGGGGGGDGG","GG::::::::::::GG","GGGGGGGGGGGGGGGG"," DDDDDDDDDDDDDD ","   WWWWWWWWWW   ","   WddddddWWW   ","   WWWWWWWWWW   ","   WMMMMMMMMW   ","   WMYYYYYYMW   ","   WMMMMMMMMW   ","   WWWWWWWWWW   ","   WddddWdddW   ","   WdddddWWWW   ","   wW wW wW w   "],[" GGGGGGGGGGGGGG ","GGGGGGGGGGGGGNGG","GG::::::::::::GG","GGGGGGGGGGGGGGGG"," DDDDDDDDDDDDDD ","   WWWWWWWWWW   ","   WddddddWWW   ","   WWWWWWWWWW   ","   WMMMMMMMMW   ","   WMYYYYYYMW   ","   WMMMMMMMMW   ","   WWWWWWWWWW   ","   WddddWdddW   ","   WdddddWWWW   ","   wW wW wW w   "]]},"pA":{"ms":600,"f":[["     GGGGGG     ","    GGGGGGGG  * "," + GGGGGGGGGG   ","   G:GGDDGGGG   ","   GGDDDDDDGG   ","   GGGGDDGG:G   ","   GGGGDDGGGG   ","   GGGGDDGGGG   ","   GG:GGGGGGG   ","   GGddddddGG   ","   GGGGGGGGGGR  ","NnN nNnNnN NnNnN","::::::::::::::::"],["     GGGGGG     ","    GGGGGGGG  * ","   GGGGGGGGGG   "," + G:GGDDGGGG   ","   GGDDDDDDGG   ","   GGGGDDGG:G   ","   GGGGDDGGGG   ","   GGGGDDGGGG   ","   GG:GGGGGGG   ","   GGddddddGG   ","   GGGGGGGGGGR  ","nNnN NnNnNnN NNn","::::::::::::::::"]]},"pB":{"ms":500,"f":[["        W       ","       WYW      ","    W   W   W   ","   WYWW    WYW  "," *  WWYW  W W   ","      WN WYW    ","     NNNNNN   + ","     YYYYYY     ","     RYYYYR     ","    r yyyy r    ","+      YY       ","       YY       ","                ","    ::::::::    "],["                ","    W   W   W   ","   WYW WYW WYW  ","    W   W W W   "," *    W  WYW    ","     WYN  W     ","     NNNNNN   + ","     YYYYYY     ","     RYYYYR     ","    r yyyy r    ","+      YY       ","       YY       ","                ","    ::::::::    "]]},"pC":{"ms":450,"f":[["            G    "," +         G     ","          G    * ","         G       ","    .: WWW:      ","NNNNNN  W NNNNNNN","::::::    :::::::","::.:::    ::.::::",":::.::    :::+:::","::::.:    ::::.::",".::::.:cccW::::.:",":.::::.cccc.::::.","::.::::.::::.::::"],["                 "," +          G    ","           G   * ","          G      ","    .:   G:      ","NNNNNN WWWNNNNNNN","::::::    :::::::","::.:::    ::.::::",":::.::    :::*:::","::::.:    ::::.::",".::::.:CCCW::::.:",":.::::.CCCC.::::.","::.::::.::::.::::"]]},"pD":{"ms":240,"f":[["  +       *       ",":::.              ","                  ","        .::.      ","                  ","                  ","N  .:::::.        ","                  ","            .::.  ","                  ","      .:::.    *  ","                  ","..::::....::::...."],["  +       *       "," .:::.            ","                  ","          .::.    ","                  "," nN               ","NN   .:::::.      ","n                 ","              .::.","                  ","        .:::.  *  ","                  ","..::::....::::...."],["  +       *       ","   .:::.          ","                  ","            .::.  ","   nN             "," NNN              "," Nn    .:::::.    "," d                ","                .:","                  ","          .:::.*  ","                  ","..::::....::::...."],["  +       *       ","     .:::.        ","                  ","     nN       .::.","   NNN            ","   Nn             ","   d     .:::::.  ","                  ",":.                ","                  ","            .::*. ","                  ","..::::....::::...."],["  +       *       ","       .:::.      ","                  ","       nN       .:","     NNN          ","     Nn           ","     d     .:::::.","                  ",".::.              ","                  ","              .*::","                  ","..::::....::::...."],["  +       *       ","         .:::.    ","                  ",":.                ","         nN       ","       NNN        ","       Nn    .::::","       d          ","  .::.            ","                  ",".              *.:","                  ","..::::....::::...."],["  +       *       ","           .:::.  ","                  ",".::.              ","                  ","           nN     ",":.       NNN   .::","         Nn       ","    .::. d        ","                  ","::.            *  ","                  ","..::::....::::...."],["  +       *       ","             .:::.","                  ","  .::.            ","                  ","                  ",":::.         nN  .","           NNN    ","      .::. Nn     ","           d      ",".:::.          *  ","                  ","..::::....::::...."],["  +       *       ","               .::","                  ","    .::.          ","                  ","                  ",":::::.         nN ","             NNN  ","        .::. Nn   ","             d    ","  .:::.        *  ","                  ","..::::....::::...."],["  +       *       ",":.               .","                  ","      .::.        ","                  ","                 n"," .:::::.       NNN","               Nn ","          .::. d  ","                  ","    .:::.      *  ","                  ","..::::....::::...."],["  +       *       ",":::.              ","                  ","        .::.      ","                  ","                 N","   .:::::.       N","                 d","            .::.  ","                  ","      .:::.    *  ","                  ","..::::....::::...."],["  +       *       "," .:::.            ","                  ","          .::.    ","                  ","                  ","     .:::::.      ","                  ","              .::.","                  ","        .:::.  *  ","                  ","..::::....::::...."]]}};
+const ART = {
+  guestbook: PXA('guestbook'),   // 簽到簿：筆一筆一劃簽名
+  dead: PXA('dead'),             // 瀏覽器：載入到一半，變成 404 臉
+  relics: PXA('relics'),         // 手機相簿：照片一張張褪色消失
+  candle: PXA('candle'),         // 白蠟燭：火焰搖晃
+  flower: PXA('flower'),         // 白菊：搖曳、花瓣飄落
+  card: PXA('card'),             // 印表機：告別人格證明印出來
+  banner: PXA('banner','banner'),// 封面 404：底部碎屑掉落
+};
+const VIS = {
+  bbs:()=>`<div class="bbs" aria-hidden="true"><div class="h"><span class="k">作者</span><span class="v">某鄉民 <span class="muted">(帳號已不存在)</span></span></div><div class="h"><span class="k">標題</span><span class="v">[爆卦] 我笑到被同事送醫</span></div><div class="h"><span class="k">時間</span><span class="v">Wed Mar 20 01:14:07 2013</span></div><div class="hr">────────────────────────────────────────</div><div>附圖在此，自己看：</div><div><span class="lnk">http://i.imgur.com/xXxXxXx.jpg</span><span class="tag404">404</span></div><div class="hr">────────────────────────────────────────</div><div><span class="push">推 </span><span class="pid">路人甲</span>: 笑到內傷</div><div class="fade"><span class="push">推 </span><span class="pid">路▒乙</span>: 存圖 這篇▒紅</div><div class="fade2"><span class="push">▒ </span><span class="pid">░░░</span>: ░░▒░</div></div>`,
+  witness:()=>`<div class="witness" aria-hidden="true"><span>[ 見證 ]</span></div>`,
+};
+/* 雜訊貼圖：開頁時用 canvas 產生一次 */
+(function(){ try{ const c=document.createElement('canvas'); c.width=c.height=160; const x=c.getContext('2d'); const d=x.createImageData(160,160);
+  for(let i=0;i<d.data.length;i+=4){ const v=Math.random()*255|0; d.data[i]=d.data[i+1]=d.data[i+2]=v; d.data[i+3]=255; }
+  x.putImageData(d,0,0); const n=document.createElement('div'); n.className='noise'; n.style.backgroundImage=`url(${c.toDataURL()})`; document.body.appendChild(n);
+}catch(_){} })();
+
+/* 打字完之後，提示與選項逐行印出（只在畫面第一次出現時） */
+function revealRest(root){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  root.querySelectorAll('.hint,.opt,.scale button,.ends,.grid .row,.links i,.big,input,textarea,.check,.bbs,.witness,.echo')
+      .forEach((el,i)=>el.style.setProperty('--i', i));
+  root.classList.add('reveal');
+}
+
+/* 打字機：每個畫面第一次出現時，把題目和幕間文字逐字印出；點一下畫面可以跳過 */
+const TYPE_MS = 28;
+let typedScreen = null, typeTimer = null, typeSkip = null;
+function typewriter(root){
+  clearInterval(typeTimer); typeSkip = null;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const targets = [...root.querySelectorAll('.qt, .act blockquote, .story')];
+  if (!targets.length){ revealRest(root); return; }
+  const nodes = [];
+  targets.forEach(t=>{ const w = document.createTreeWalker(t, NodeFilter.SHOW_TEXT); let n; while((n=w.nextNode())){ if(n.parentElement.closest('.req')) continue; nodes.push([n, n.nodeValue]); n.nodeValue=''; } });
+  const cur = document.createElement('span'); cur.className='cur'; cur.textContent='▌';
+  root.classList.add('typing');
+  let i = 0, k = 0;
+  const finish = ()=>{ clearInterval(typeTimer); nodes.forEach(([n,v])=>n.nodeValue=v); cur.remove(); root.classList.remove('typing'); typeSkip = null; revealRest(root); };
+  typeSkip = finish;
+  typeTimer = setInterval(()=>{
+    if (i >= nodes.length) return finish();
+    const [n, v] = nodes[i];
+    n.nodeValue = v.slice(0, ++k); n.parentNode.insertBefore(cur, n.nextSibling);
+    if (k >= v.length){ i++; k = 0; }
+  }, TYPE_MS);
+}
+
+/* ---------- 題目（題號 = 原問卷題號，第 23 題信箱已移到開頭） ---------- */
+const S = [];
+const act = (n,title,lead,art)=>S.push({type:'act',act:n,title,lead,art});
+const Q = (act,...items)=>S.push({type:'q',act,items});
+const o = (v,l,s)=>({v,l,s});
+
+S.push({type:'cover'},{type:'consent'},{type:'email'});
+
+/* 顯示對象：預設只給 PTT 使用者；W('both') 兩種人都看；W('non') 只給非 PTT 使用者（短版問卷） */
+const W = who => { S[S.length-1].who = who; };
+
+act(1,'報到處','告別式要先簽到。<br>請問您是哪一桌的？','guestbook');
+Q(1,{id:'q1',kind:'single',req:1,text:'您的 PTT 使用年資為何？',options:[
+  o('<1','未滿 1 年','朋友傳連結給我才發現 PTT 還活著'),
+  o('1-3','1–3 年','最近幾年才開始固定看'),
+  o('3-5','3–5 年','大概是疫情那幾年開始的'),
+  o('5-10','5–10 年','手機 App 時代加入的'),
+  o('10+','10 年以上','用過 PCMan 或 telnet 連線的老鄉民'),
+  o('non','我不是 PTT 使用者')]});
+Q(1,{id:'q2',kind:'single',req:1,text:'您的年齡？',options:['18-22','23-27','28-32','33-37','38-42','43-47','48-54','55-60','61+'].map(v=>o(v,v==='61+'?'61 歲以上':v.replace('-','–')+' 歲'))}); W('both');
+Q(1,{id:'q3',kind:'single',req:1,text:'你現在多常上 PTT？',options:[
+  o('many_daily','每天好幾次','手機一滑就進去了'),o('daily','每天一次左右'),o('weekly','一週幾次'),
+  o('when_needed','有事（或有瓜）才上'),o('rarely','幾乎不上了','但帳號捨不得砍')]});
+Q(1,{id:'q4',kind:'multi',req:1,text:'下列已經關站的平台，你用過哪些？',hint:'可複選',exclusive:'none',other:'other',options:[
+  o('wretch','無名小站'),o('yahoo_blog','Yahoo!奇摩部落格'),o('xuite','Xuite 隨意窩'),o('other','其他'),o('none','都沒用過','太年輕了，謝謝')]}); W('both');
+
+act(2,'猜猜看：還活著嗎？','在正式開始之前，先來玩個小遊戲。<br>憑直覺猜就好，沒有標準答案<br><span class="muted">（其實有，最後揭曉）</span>','dead');
+Q(2,{id:'q5',kind:'links',req:1,text:'你覺得 2013 年八卦板熱門文裡的外部連結，到今天還打得開的大概有幾成？',hint:'點一下格子：亮起來的是還活著的'}); W('both');
+Q(2,{id:'q6',kind:'single',req:1,text:'你覺得哪一種連結死得最快？',options:[
+  o('news','新聞媒體連結'),o('blog','個人部落格'),o('imghost','圖床','imgur、無名相簿等'),o('shortener','縮網址','ppt.cc、bit.ly 等'),o('youtube','YouTube 影片')]}); W('both');
+/* 揭曉頁移到第五幕結尾，避免 Pew 數據錨定後面的題目 */
+
+act(3,'清點遺物','每個人的手機和書籤裡，<br>都藏著一些還沒被發現的遺物。','relics');
+Q(3,{id:'q7',kind:'scale',req:1,min:1,max:5,ends:['從來沒遇過','已經是 404 收藏家'],text:'過去半年，你點 PTT 舊文連結遇到 404／失效的頻率？'});
+/* Q8 拆成情緒（q8）與行為（q8b）兩題 */
+Q(3,{id:'q8',kind:'single',req:1,visual:'bbs',text:'你發現十年前那篇讓你笑到內傷的神文，連結打開卻是 404。當下的感覺比較接近？',options:[
+  o('none','沒什麼感覺'),o('pity','有點可惜'),o('sad','明顯失落'),o('grief','很難過，像失去一段青春')]},
+  {id:'q8b',kind:'single',req:1,text:'然後你通常會？',options:[
+  o('close','關掉，就這樣'),o('search','自己找備份（Google、網路時光機…）'),o('ask','問朋友或群組有沒有人存')]});
+Q(3,{id:'q9',kind:'single',req:1,text:'老實說，你手機相簿裡有多少張 PTT 截圖？',options:[
+  o('0','0 張','我不截圖'),o('1-10','1–10 張'),o('11-50','11–50 張'),o('50+','51–200 張'),o('museum','200 張以上','我的相簿根本是一座 PTT 博物館')]});
+Q(3,{id:'q10',kind:'grid',req:1,cols:FREQ,text:'下面這些事你多常做？',rows:[
+  ['a','看到好文會收進「我的最愛」或書籤'],['b','怕文章被刪，先截圖或存檔起來'],['c','把覺得重要的文章轉存到其他地方（筆記、雲端、其他平台）']]});
+Q(3,{id:'q11',kind:'single',req:1,num:1,text:'你知道「網路時光機」（Wayback Machine）嗎？',options:[
+  o('1','從沒聽過'),o('2','聽過但沒用過'),o('3','用過幾次','需要的時候才想到'),o('4','常常用','我就是活的時光機')]});
+
+/* 第四幕：核心態度量表，放在追思與告別式情境之前；引言只營造氣氛、不陳述論點 */
+act(4,'守靈','夜深了，靈堂裡只剩下你。<br>接下來幾題沒有對錯，照你平常的想法回答就好。','candle');
+Q(4,{id:'q15',kind:'grid',req:1,cols:LIKERT,text:'以下說法你同意嗎？',rows:[
+  ['a','發現喜歡的舊文消失時，我會覺得失落'],['b','舊文消失，感覺像是失去了一段自己的回憶'],
+  ['attn','這題請選「有點同意」，證明你是真人不是來騙禮券的機器人 (´・ω・`)'],
+  ['c','我曾經在 PTT 留下的文章和推文，某種程度上是屬於我的'],['e','連結失效這種事，我其實不太在意']]});
+/* Q20a 拆成 a（沒有儀式）與 a2（與現實告別不同），兩題為感知題，不計入儀式需求分數 */
+Q(4,{id:'q20',kind:'grid',req:1,cols:LIKERT,text:'以下說法你同意嗎？',rows:[
+  ['a','網路內容消失時，通常沒有任何告別或儀式'],
+  ['a2','網路內容的消失，跟現實中的告別（例如店家收掉、建築拆除）感覺很不一樣'],
+  ['b','如果消失前有某種告別的過程，我會比較釋懷'],
+  ['c','我希望重要的網路內容消失時，至少有人知道'],['d','網頁有沒有人「看著它消失」，對我來說不重要']]}); W('both');
+Q(4,{id:'q16',kind:'single',req:1,text:'你家巷口開了 15 年的麵店突然收掉 vs. 你天天看的 PTT 看板突然被廢——哪一個讓你比較難受？',options:[
+  o('physical','麵店'),o('digital','PTT 看板'),o('equal','差不多難受'),o('none','都還好')]},
+  {id:'q17',kind:'text',text:'為什麼？',hint:'選填',max:200});
+Q(4,{id:'q16n',kind:'single',req:1,text:'你家巷口開了 15 年的麵店突然收掉 vs. 你最常用的網路社群（IG、Dcard、論壇…）突然關站——哪一個讓你比較難受？',options:[
+  o('physical','麵店'),o('digital','那個網路社群'),o('equal','差不多難受'),o('none','都還好')]},
+  {id:'q17n',kind:'text',text:'為什麼？',hint:'選填',max:200}); W('non');
+Q(4,{id:'q19',kind:'single',req:1,text:'當一個網頁即將消失，你希望發生什麼事？',options:[
+  o('notify','通知我一聲就好'),o('backup','讓我有機會備份下來'),o('memorial','有一個地方可以紀念它'),o('letgo','什麼都不需要','讓它自然消失')]}); W('both');
+
+act(5,'告別式','那些再也打不開的連結，<br>也曾經被某個人認真地點開過。','flower');
+Q(5,{id:'q12',kind:'longtext',text:'有沒有一篇你曾經回去找，卻再也找不到的文？說說它吧。',hint:'選填｜是什麼內容？當時為什麼想回去找？'});
+Q(5,{id:'q13',kind:'text',text:'如果要幫那篇文（或任何一個消失的網頁）寫一句墓誌銘，你會寫什麼？',hint:'選填｜例：「此文已死，推文猶溫」',max:60},
+    {id:'q14',kind:'check',label:'我同意我的墓誌銘在匿名的前提下，用於本研究的藝術展出。'});
+Q(5,{id:'q18',kind:'multi',req:1,max:3,exclusive:'nothing',text:'如果 PTT 明天關站，你最想帶走什麼？',hint:'最多選 3 項',options:[
+  o('posts','自己發過的文章'),o('pushes','自己的推文紀錄'),o('mail','站內信'),o('favboards','我的最愛看板清單'),o('signature','簽名檔'),o('ids','某些網友的 ID','想記得他們'),o('nothing','什麼都不用帶','瀟灑離開')]});
+Q(5,{id:'q21',kind:'single',req:1,visual:'witness',text:'如果有一台機器，讓你按下按鈕就能「見證」一個快死掉的連結，並真的把它保存下來，你會想按嗎？',options:[
+  o('yes_always','會，而且想一直按'),o('yes_care','會，如果是我在乎的連結'),o('maybe','看心情'),o('no','不會，沒什麼感覺')]});
+S.push({type:'reveal',act:5}); W('both');
+
+act(6,'領取你的告別人格','最後兩題。<br>你的告別人格，正在印製中。','card');
+Q(6,{id:'q22',kind:'text',text:'你心中 PTT 最強神文是哪一篇？',hint:'彩蛋題，純粹想知道 (。・ω・。)',max:120});
+Q(6,{id:'q24',kind:'single',req:1,last:1,text:'最後一題：面對網路上的消失，你最像哪一句？',options:[
+  o('A','「我要把它存起來。」'),o('B','「至少讓我好好看它最後一眼。」'),o('C','「一定還找得回來，我不相信。」'),o('D','「來來去去，本來就是這樣。」')]});
+S.push({type:'submit',act:6},{type:'result',act:6});
+const IDX = t => S.findIndex(s=>s.type===t);
+/* Windows 關閉「動畫效果」時瀏覽器會回報 prefers-reduced-motion，整站動畫會停用 */
+const WIN_TIP = () => /Windows/i.test(navigator.userAgent)
+  ? `<li${matchMedia('(prefers-reduced-motion: reduce)').matches?' style="color:var(--y)"':''}>Windows 使用者建議開啟動畫效果，以獲得最佳體驗（設定 › 協助工具 › 視覺效果 › 動畫效果）</li>` : '';
+
+const PERSONA = {
+  A:{name:'守墓人型',code:'TYPE-A',emo:PXA('pA'),text:'你的相簿、書籤、雲端硬碟就是一座私人典藏館。在所有人都沒注意的時候，是你默默替網路記憶守夜。'},
+  B:{name:'送行者型',code:'TYPE-B',emo:PXA('pB'),text:'你不一定能留住什麼，但你相信消失值得被好好看一眼。你就是這場告別式最需要的那位出席者。'},
+  C:{name:'考古學家型',code:'TYPE-C',emo:PXA('pC'),text:'404 對你來說不是結局，是線索。時光機、快取、網友的截圖——你總能從廢墟裡挖出點什麼。'},
+  D:{name:'過客型',code:'TYPE-D',emo:PXA('pD'),text:'你看得很開：網路本來就是流動的，來來去去都是風景。但也許正因如此，更值得有人記得它曾經存在過。'},
+};
+
+/* ---------- 每幕收下的遺物（不含任何他人數據的即時回饋） ---------- */
+const RELIC = {1:['證','出席證'],2:['沙','時光沙漏'],3:['籤','一張書籤'],4:['燭','白蠟燭'],5:['菊','白菊'],6:['卡','告別人格證明']};
+
+/* ---------- 五個維度（0–1），雷達圖與人格判定共用 ---------- */
+function dims(){
+  const sc = scores(); const n = (x,lo,hi)=>(x-lo)/(hi-lo);
+  const shots = {'0':0,'1-10':.25,'11-50':.5,'50+':.75,'museum':1}[A.q9];
+  return {
+    archive: n(sc.archive,1,5),                                         // 典藏力：Q10
+    attach:  n(sc.attach,1,5),                                          // 念舊指數：Q15
+    ritual:  n(sc.ritual,1,5),                                          // 儀式需求：Q20
+    dig:     .7*n(A.q11,1,4) + .3*(['search','ask'].includes(A.q8b)?1:0), // 考古力：Q11 時光機＋Q8b 會去找備份
+    hit:     n(A.q7,1,5),                                               // 404 遭遇度：Q7
+    shots,
+  };
+}
+const DIM_LABEL = [['archive','典藏力'],['attach','念舊'],['ritual','儀式需求'],['dig','考古力'],['hit','404 遭遇']];
+
+/* 人格判定：四型各自算親和度，取最高（同分依 A→B→C→D）。Q24 自評另外保存，用來檢驗收斂效度 */
+function personaScores(){
+  const d = dims();
+  return {
+    A: .6*d.archive + .4*d.shots,          // 守墓人：自己存
+    B: .6*d.ritual  + .4*d.attach,         // 送行者：需要好好告別
+    C: .7*d.dig     + .3*d.hit,            // 考古學家：會去挖回來
+    D: 1 - (.5*d.attach + .5*d.ritual),    // 過客：放得下
+  };
+}
+function calcPersona(){ const p = personaScores(); return ['A','B','C','D'].reduce((m,k)=>p[k]>p[m]?k:m,'A'); }
+
+/* 敘事式總結：依作答組合挑最符合的兩句 */
+function story(){
+  const d = dims(); const out = [];
+  const add = (cond, s)=>{ if(cond && out.length<2) out.push(s); };
+  add(['50+','museum'].includes(A.q9) && A.q11<=2, '你的相簿裡藏著一座 PTT 博物館，卻從沒用過網路時光機——比起任何典藏機構，你更相信自己。');
+  add(A.q9==='0' && d.attach>=.75, '你一張截圖都沒存，卻比誰都捨不得舊文。也許你把它們存在了別的地方：記憶裡。');
+  add(A.q18 && A.q18.includes('ids'), 'PTT 關站那天，你想帶走的是某些網友的 ID。比起文章，你更捨不得的是人。');
+  add(A.q16==='digital', '對你來說，看板被廢比巷口麵店收掉還難受。你在那裡待過的時間，是真的。');
+  add(A.q8==='grief', '看到神文變成 404，你的第一個念頭是：這是我的青春欸。');
+  add(A.q1==='10+', '你在 PTT 待了十年以上，看過的消失比大多數人都多。');
+  add(A.q21==='yes_always', '給你一顆見證按鈕，你會一直按下去。');
+  add(A.q5>=7, `你猜 2013 年的連結還有 ${A.q5} 成活著——你對網路，比網路對你溫柔。`);
+  add(A.q5<=2, `你猜只剩 ${A.q5} 成還活著——你早就看透網路的健忘。`);
+  add(A.q19==='memorial', '你希望消失的網頁能有一個被紀念的地方。');
+  add(A.q16==='none', '麵店收了、看板廢了，你都還好。來來去去，你早就習慣。');
+  add(true, '你點開過的每一個連結，都曾經是某個人認真留下的東西。');
+  add(true, '謝謝你替它們出席。');
+  return out.map(s=>`<div>: ${s}</div>`).join('');
+}
+
+/* 雷達圖（inline SVG，無外部套件） */
+/* 五維度：ANSI 方塊長條（取代雷達圖） */
+function dimBars(colors){
+  const d = dims(); const C = colors || ['var(--g)','var(--m)','var(--y)','var(--c)','var(--r)'];
+  return `<div class="dimbars" role="img" aria-label="五個維度：${DIM_LABEL.map(([k,l])=>l+' '+Math.round(d[k]*100)).join('、')}">` +
+    DIM_LABEL.map(([k,l],i)=>{ const v = Math.round(d[k]*100), f = Math.round(v/10);
+      return `<div><span>${l}</span><span style="color:${C[i]}">${'█'.repeat(f)}${'░'.repeat(10-f)}</span><b>${v}</b></div>`; }).join('') + `</div>`;
+}
+function radarSVG({ink, grid, fill, sub}){
+  const d = dims(); const N = DIM_LABEL.length; const c = 150, R = 92;
+  const pt = (i,r)=>{ const a = -Math.PI/2 + i*2*Math.PI/N; return [c + r*Math.cos(a), c + r*Math.sin(a)]; };
+  const ring = r => DIM_LABEL.map((_,i)=>pt(i,r).join(',')).join(' ');
+  let s = `<svg class="radar" viewBox="0 0 300 300" role="img" aria-label="五個維度的雷達圖">`;
+  [.25,.5,.75,1].forEach(f=> s += `<polygon points="${ring(R*f)}" fill="none" stroke="${grid}" stroke-width="1"/>`);
+  DIM_LABEL.forEach((_,i)=>{ const [x,y]=pt(i,R); s += `<line x1="${c}" y1="${c}" x2="${x}" y2="${y}" stroke="${grid}" stroke-width="1"/>`; });
+  const poly = DIM_LABEL.map(([k],i)=>pt(i, R*Math.max(.04, d[k])).join(',')).join(' ');
+  s += `<polygon points="${poly}" fill="${fill}" stroke="${ink}" stroke-width="2" stroke-linejoin="round"/>`;
+  DIM_LABEL.forEach(([k],i)=>{ const [x,y]=pt(i, R*Math.max(.04,d[k])); s += `<circle cx="${x}" cy="${y}" r="3.5" fill="${ink}"/>`; });
+  DIM_LABEL.forEach(([k,l],i)=>{ const [x,y]=pt(i,R+26); s += `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="middle" font-size="13" fill="${ink}" font-family="Noto Sans TC,sans-serif">${l}</text><text x="${x}" y="${y+16}" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="${sub}" font-family="Noto Sans TC,sans-serif">${Math.round(d[k]*100)}</text>`; });
+  return s + `</svg>`;
+}
+
+/* ---------- 狀態 ---------- */
+let SUBMITTING = false; let idx = 0; const hist = []; const A = {}; let EMAIL = ''; let RESULT = null; let FLAG = null;
+const app = document.getElementById('app'), nextBtn = document.getElementById('next'), backBtn = document.getElementById('back');
+const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ---------- 計分（與 SQL 一致，僅供預覽模式／即時顯示） ---------- */
+function scores(){
+  const m = a => a.reduce((x,y)=>x+y,0)/a.length;
+  return {
+    archive: m(['a','b','c'].map(k=>A.q10[k])),
+    attach:  m([A.q15.a, A.q15.b, 6-A.q15.e]),
+    ritual:  m([A.q20.b, A.q20.c, 6-A.q20.d]),   // 儀式需求：b、c＋反向 d（a、a2 為感知題，另外分析）
+  };
+}
+
+/* ---------- 驗證 ---------- */
+function itemOK(it){
+  const v = A[it.id];
+  if (!it.req) return true;
+  if (it.kind==='multi'){ if(!Array.isArray(v)||!v.length) return false; if(it.other&&v.includes(it.other)&&!(A[it.id+'_other']||'').trim()) return false; return true; }
+  if (it.kind==='grid') return v && it.rows.every(([k])=>v[k]);
+  return v!==undefined && v!=='';
+}
+function screenOK(s){
+  if (s.type==='consent') return !!(FLAG?.consent && FLAG?.adult);
+  if (s.type==='email') return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(EMAIL.trim());
+  if (s.type==='q') return s.items.every(itemOK);
+  return true;
+}
+
+/* ---------- 渲染 ---------- */
+function renderItem(it){
+  const v = A[it.id];
+  let h = `<div class="q"><div class="qt">${it.text}${it.req?'<span class="req">[必填]</span>':''}</div>${it.hint?`<p class="hint">${it.hint}</p>`:''}${it.visual?VIS[it.visual]():''}`;
+  if (it.kind==='single'){
+    h += `<div class="opts">${it.options.map(op=>`<button class="opt ${String(v)===op.v?'on':''}" data-a="single" data-q="${it.id}" data-v="${op.v}"><span class="ol">${op.l}</span>${op.s?`<span class="os">${op.s}</span>`:''}</button>`).join('')}</div>`;
+    const pi = it.options.findIndex(op=>String(v)===op.v);
+    if (pi>=0) h += `<div class="echo">$ answer ${it.id} --opt=${pi+1} <span class="ok">[OK]</span>${(it.last||S[idx].items.length>1)?'':' 前往下一題…'}<span class="cur">▌</span></div>`;
+  } else if (it.kind==='multi'){
+    const arr = v||[]; const full = it.max && arr.length>=it.max;
+    h += `<div class="opts">${it.options.map(op=>{const on=arr.includes(op.v);return `<button class="opt multi ${on?'on':''}" ${full&&!on?'disabled':''} data-a="multi" data-q="${it.id}" data-v="${op.v}"><span class="ol">${op.l}</span>${op.s?`<span class="os">${op.s}</span>`:''}</button>`}).join('')}</div>`;
+    if (it.other && arr.includes(it.other)) h += `<input type="text" maxlength="60" placeholder="請填寫平台名稱" data-a="text" data-q="${it.id}_other" value="${esc(A[it.id+'_other'])}">`;
+  } else if (it.kind==='scale'){
+    h += `<div class="scale">${Array.from({length:it.max-it.min+1},(_,i)=>i+it.min).map(n=>`<button class="${v===n?'on':''}" data-a="num" data-q="${it.id}" data-v="${n}">${n}</button>`).join('')}</div><div class="ends"><span>${it.min}　${it.ends[0]}</span><span>${it.ends[1]}　${it.max}</span></div>`;
+  } else if (it.kind==='links'){
+    h += `<div class="links">${Array.from({length:10},(_,i)=>`<i class="${v!==undefined?(i<v?'alive':'dead'):''}" data-a="links" data-v="${i+1}" role="button" aria-label="${i+1} 成"></i>`).join('')}</div>
+          <div class="ends"><span><button class="back" style="padding:4px 0" data-a="links" data-v="0">0 成（全滅）</button></span><span>10 成（全部健在）</span></div>
+          <div class="big">${v===undefined?'？':v+' 成'}</div>`;
+  } else if (it.kind==='grid'){
+    const g = v||{};
+    h += `<div class="grid">${it.rows.map(([k,t])=>`<div class="row ${g[k]?'on':''}"><div class="st">${t}</div><div class="cells">${it.cols.map((c,i)=>`<button class="${g[k]===i+1?'on':''}" data-a="grid" data-q="${it.id}" data-k="${k}" data-v="${i+1}">${c}</button>`).join('')}</div></div>`).join('')}</div>`;
+  } else if (it.kind==='text'){
+    h += `<input type="text" maxlength="${it.max||100}" data-a="text" data-q="${it.id}" value="${esc(v)}" placeholder="寫點什麼…">`;
+  } else if (it.kind==='longtext'){
+    h += `<textarea maxlength="1000" data-a="text" data-q="${it.id}" placeholder="寫點什麼…">${esc(v)}</textarea>`;
+  } else if (it.kind==='check'){
+    h = `<label class="check"><input type="checkbox" data-a="check" data-q="${it.id}" ${v?'checked':''}><span>${it.label}</span></label>`;
+    return h;
+  }
+  return h + `</div>`;
+}
+
+function chrome(){
+  const s = S[idx]; const a = s.act||0;
+  const got = s.type==='result' ? 7 : a;   // 結果頁 = 六件遺物全部收齊
+  const justGot = s.type==='act' ? a-1 : s.type==='result' ? 6 : 0;
+  document.getElementById('acts').innerHTML = a ? [1,2,3,4,5,6].map(n=>`<i class="${n<got?'done':n===got?'now':''} ${n===justGot?'pop':''}" title="${RELIC[n][1]}"><span>${RELIC[n][0]}</span></i>`).join('') : '';
+  document.getElementById('actlabel').textContent = a ? `第${'一二三四五六'[a-1]}幕` : '【告別式站】';
+  backBtn.hidden = !hist.length || ['cover','submit','result','dup','thanks'].includes(s.type);
+  const nav = document.getElementById('nav');
+  nav.style.display = ['submit','dup','thanks','result'].includes(s.type) ? 'none' : '';
+  nextBtn.disabled = !screenOK(s);
+  nextBtn.textContent = s.type==='cover' ? '請按任意鍵繼續' : s.type==='consent' ? '[Y] 我同意，進入會場' : s.type==='email' ? '簽到' :
+                        s.type==='act' ? `[→] 進入第${'一二三四五六'[s.act-1]}幕` : (s.items&&s.items.some(i=>i.last)) ? '[Y] 送出，領取告別人格' : '[→] 下一步';
+}
+
+function render(){
+  const s = S[idx]; let h = '';
+  if (s.type==='cover'){
+    h = `<div class="conn"><div>Trying 140.114.404.0...</div><div>Connected to farewell.404. <span class="ok">[OK]</span></div><div>最後一次有人造訪：<span class="bad">2013/03/20 01:14</span></div></div>
+      <div class="m-only cover-art">${ART.banner}
+      <div class="ascii" style="text-align:center;font-size:11px;letter-spacing:.3em;color:#6b6b6b">N O T  <span class="rot scr">░</span> F O U N D</div></div>
+      <h1 class="m-only glitch" data-text="一場沒有人來的&#10;告別式" style="text-align:center">一場沒有人來的<br>告<span class="rot">別</span>式</h1>
+      <div class="lead" style="margin-top:18px"><p>你點過的連結、推過的文、笑到內傷的神文——有些已經悄悄死掉了，<span style="color:var(--r)">而且沒有人發現。</span></p>
+      <p>這是國立清華大學藝術學院學士班的研究計畫，想知道鄉民們怎麼看待「網路內容的消失」。填完大約 6–8 分鐘，最後會揭曉你的<span style="color:var(--g)">數位告別人格</span>。</p></div>
+      <div class="box"><span class="bt">┤ 入場須知 ├</span><ul class="meta"><li>填完即參加 ${esc(CONFIG.RAFFLE)}（統計至 ${esc(CONFIG.RAFFLE_END)}，之後送出的不列入抽獎）</li><li>不蒐集 PTT ID；信箱與作答分開存放</li><li>指導教授：蔡遵弘（清華大學科技藝術研究所）</li>${WIN_TIP()}</ul></div>
+      <div class="muted small">請輸入代號，或以 <span style="color:var(--hi)">guest</span> 參觀：<span style="color:var(--hi)">guest</span><span class="cur">▌</span></div>`;
+  } else if (s.type==='consent'){
+    h = `<h1 class="m-only" style="font-size:28px">入場須知</h1>
+      <p class="muted small">這是一份包裝成測驗的學術研究問卷。請花 30 秒看一下：</p>
+      <div class="doc">
+        <h3>研究目的</h3><p>了解 PTT 使用者如何感知與看待網路內容（連結、文章、平台）的消失，為國立清華大學藝術學院學士班「無聲的告別」研究計畫的一部分。研究者：林士恩（國立清華大學藝術學院學士班）；指導教授：蔡遵弘（國立清華大學科技藝術研究所）。</p>
+        <h3>你需要做什麼</h3><p>回答約 24 題，約 6–8 分鐘。多數為選擇題，文字題皆可略過。</p>
+        <h3>會蒐集哪些資料</h3><p>你的作答內容，以及一個電子信箱。<b>信箱只用於：確認每人只填一次、7-ELEVEN 禮券抽獎通知（抽獎資格統計至 ${esc(CONFIG.RAFFLE_END)}）；若你在最後主動表示願意受訪，也會用來聯絡你。</b>信箱與作答內容存放在兩張不同的資料表，彼此沒有可對照的欄位。不蒐集 PTT ID。</p>
+        <h3>資料怎麼用</h3><p>僅用於學術研究與成果發表，以整體統計呈現，不會揭露個人身分。開放式回答整理時會去識別化。墓誌銘只有在你勾選同意時，才會以匿名方式用於藝術展出。抽獎結束後，信箱明碼即刪除。</p>
+        <h3>你的權利</h3><p>參與完全自願。送出前隨時關閉頁面即退出，未送出的答案不會被儲存。</p>
+        ${CONFIG.CONTACT_EMAIL?`<h3>聯絡研究者</h3><p>${esc(CONFIG.CONTACT_EMAIL)}</p>`:''}
+      </div>
+      <label class="check"><input type="checkbox" data-a="flag" data-k="adult" ${FLAG?.adult?'checked':''}><span>我已年滿 18 歲</span></label>
+      <label class="check"><input type="checkbox" data-a="flag" data-k="consent" ${FLAG?.consent?'checked':''}><span>我已閱讀上述說明，同意參加本研究</span></label>`;
+  } else if (s.type==='email'){
+    h = `<div class="act m-only" style="padding-top:2vh"><div class="art">${ART.guestbook}</div></div>
+      <div class="qt" style="font-size:20px">請在簽到簿留下信箱</div>
+      <p class="hint" style="font-size:14px">每人只能出席一次。信箱也會用來通知抽獎結果，且與作答內容分開存放。</p>
+      <input type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" data-a="email" value="${esc(EMAIL)}">
+      <div class="err" id="err"></div>`;
+  } else if (s.type==='act'){
+    const prev = s.act-1;
+    h = `<div class="act">${prev?`<div class="stamp"><b>${RELIC[prev][0]}</b><span>第${'一二三四五'[prev-1]}幕完成・收下${RELIC[prev][1]}</span></div><br>`:''}<div class="num" style="margin-top:${prev?'22px':'0'}">ACT ${s.act} ── 第${'一二三四五六'[s.act-1]}幕／共六幕</div><h2>${s.title}</h2><div class="art m-only">${ART[s.art]}</div><blockquote>${s.lead}</blockquote></div>`;
+  } else if (s.type==='q'){
+    h = s.items.map(renderItem).join('');
+  } else if (s.type==='reveal'){
+    const g = A.q5;
+    h = `<div class="act" style="padding-top:2vh"><div class="num">揭 曉</div></div>
+      <div class="compare"><div><span class="small muted">你猜還活著</span><b>${g} 成</b></div><div class="real"><span class="small muted">2013 年的網頁<br>今天打不開</span><b>&gt; 1/3</b></div></div>
+      <div class="lead"><p>根據 Pew Research Center（2024）的調查，2013 年存在的網頁，超過三分之一現在已經打不開了。</p>
+      <p>而 PTT 的數字是多少？這正是本研究正在用爬蟲一篇一篇檢查的事情。你的猜測，會拿來跟真實數據比對。</p></div>`;
+  } else if (s.type==='submit'){
+    h = `<div class="spin"></div><p class="muted" style="text-align:center">$ persona --calc<br>正在為你上香、印製告別人格…</p><div class="err" id="err" style="text-align:center"></div><div id="retry"></div>`;
+    if (!SUBMITTING){ SUBMITTING = true; setTimeout(submit, 50); }
+  } else if (s.type==='result'){
+    h = renderResult();
+  } else if (s.type==='dup'){
+    h = `<div class="act"><div class="art m-only">${ART.candle}</div><h2 style="font-size:28px">你已經出席過了</h2><blockquote>這個信箱已經簽到過這場告別式。<br>每人只能出席一次，謝謝你再次前來悼念 (_ _)</blockquote></div>
+      <p class="note" style="margin-top:28px">輸入錯了嗎？<button class="back" data-a="reemail" style="color:var(--amber)">換個信箱</button></p>`;
+  } else if (s.type==='thanks'){
+    h = `<div class="act"><div class="art m-only">${ART.flower}</div><h2 style="font-size:28px">感謝你的出席</h2><blockquote>這場告別式的主角是 PTT 鄉民，<br>你的回答會成為研究裡的對照組。謝謝你願意走進來 (_ _)</blockquote></div>`;
+  }
+  app.innerHTML = `<div class="screen ${s.type==='cover'?'is-cover':''}">${h}</div>`;
+  if (typedScreen !== s){ typedScreen = s; typewriter(app.firstElementChild); }
+  else { clearInterval(typeTimer); typeSkip = null; app.firstElementChild.classList.add('still'); }
+  renderAside(s);
+  chrome();
+  if (s.type==='result') requestAnimationFrame(()=>setTimeout(()=>document.querySelectorAll('.bar i').forEach(b=>b.style.width=b.dataset.w+'%'),60));
+}
+
+
+/* ---------- 電腦版左側舞台 ---------- */
+const MQ = matchMedia('(min-width:960px)');
+const isDesk = () => MQ.matches;
+const ACT_META = {}; S.forEach(s=>{ if(s.type==='act') ACT_META[s.act] = s; });
+function relicGrid(got, justGot){
+  return `<div class="side-relics">${[1,2,3,4,5,6].map(n=>`<div class="sr ${n<got?'done':n===got?'now':''} ${n===justGot?'pop':''}"><span>${RELIC[n][0]}</span><small>${RELIC[n][1]}</small></div>`).join('')}</div>`;
+}
+function renderAside(s){
+  const el = document.getElementById('aside'); if (!isDesk()){ el.innerHTML=''; el._h=null; return; }
+  let h = ''; let center = false;
+  const a = s.act||0;
+  if (s.type==='cover'){
+    center = true;
+    h = `<div class="side-art big">${ART.banner}</div><div class="ascii" style="font-size:12px;letter-spacing:.3em;color:#6b6b6b">N O T  <span class="rot scr">░</span> F O U N D</div><h1 class="side-title glitch" data-text="一場沒有人來的&#10;告別式" style="margin-top:28px">一場沒有人來的<br>告<span class="rot">別</span>式</h1><p class="side-sub">國立清華大學藝術學院學士班 ·「無聲的告別」數位消失研究</p>`;
+  } else if (s.type==='consent' || s.type==='email'){
+    h = `<div class="side-num">LOGIN ── 入場</div><h2 class="side-title">${s.type==='consent'?'入場須知':'簽到處'}</h2>
+         <div class="side-art">${ART.guestbook}</div>
+         <p class="side-lead">${s.type==='consent'?'這是一份包裝成測驗的學術研究問卷。<br>請花 30 秒，看看我們會怎麼使用你的回答。':'每人只能出席一次。<br>信箱和你的作答，會分開存放。'}</p>`;
+  } else if (s.type==='result'){
+    center = true;
+    const p = PERSONA[calcPersona()]; const r = RESULT||{};
+    const no = r.attendee_no ? String(r.attendee_no).padStart(4,'0') : '----';
+    const t = new Date(); const d = `${t.getFullYear()}.${String(t.getMonth()+1).padStart(2,'0')}.${String(t.getDate()).padStart(2,'0')}`;
+    h = `<div class="side-card" style="width:100%;max-width:380px">${cardHTML(p, r, no, d, (A.q13||'').trim(), story())}
+         <div class="share"><button class="btn" data-a="save">[S] 儲存告別人格證明</button></div>
+         <p class="note">截圖你的告別人格，推文分享也歡迎 (´・ω・\`)</p></div>`;
+  } else if (s.type==='dup'){
+    center = true; h = `<div class="side-art big">${ART.candle}</div>`;
+  } else if (s.type==='thanks'){
+    center = true; h = `<div class="side-art big">${ART.flower}</div>`;
+  } else if (a){
+    const m = ACT_META[a];
+    const got = a, justGot = s.type==='act' ? a-1 : 0;
+    if (s.type==='act'){
+      center = true;
+      h = `<div class="side-art big">${ART[m.art]}</div>${relicGrid(got, justGot)}`;
+    } else {
+      h = `<div class="side-num">第${'一二三四五六'[a-1]}幕</div><h2 class="side-title">${m.title}</h2>
+           <div class="side-art">${ART[m.art]}</div><p class="side-lead">${m.lead}</p>${relicGrid(got, 0)}
+           <p class="side-hint"><kbd>1</kbd>–<kbd>9</kbd> 選擇選項　<kbd>Enter</kbd> 下一步</p>`;
+    }
+  }
+  el.className = center ? 'center' : '';
+  if (el._h !== h){ el._h = h; el.innerHTML = `<div class="side-inner">${h}</div>`; }   // 內容沒變就不重畫，動畫才不會一直重播
+}
+
+/* ---------- 結果頁 ---------- */
+function renderResult(){
+  const key = calcPersona(); const p = PERSONA[key]; const r = RESULT||{}; const sc = scores();
+  const stats = [
+    ['archive','典藏力', x=>`你的典藏力勝過 ${x}% 的鄉民`],
+    ['attach','念舊指數', x=>`你比 ${x}% 的鄉民更捨不得舊文`],
+    ['ritual','儀式需求', x=>`你比 ${x}% 的鄉民更需要一場告別`],
+  ];
+  const pct = r.pct;
+  const no = r.attendee_no ? String(r.attendee_no).padStart(4,'0') : '----';
+  const today = new Date(); const d = `${today.getFullYear()}.${String(today.getMonth()+1).padStart(2,'0')}.${String(today.getDate()).padStart(2,'0')}`;
+  const ep = (A.q13||'').trim();
+  const st = story();
+  const rarity = `<span class="rar">${p.code}${r.rarity!=null?` ── 全場只有 <b>${r.rarity}%</b> 的出席者是${p.name}`:''}</span>`;
+  const statHTML = stats.map(([k,l,say])=>{
+    const raw = Math.round((sc[k]-1)/4*100);
+    const w = pct ? pct[k] : raw;
+    return `<div class="stat"><div class="lbl"><span>${l}</span><b>${pct?w+'%':(sc[k].toFixed(1)+' / 5')}</b></div><div class="bar"><i data-w="${w}"></i></div><div class="say">${pct?say(w):'你是第一位出席者，還沒有人可以比較'}</div></div>`;
+  }).join('');
+  const iv = IV.done
+    ? `<div class="iv"><h3>&gt; 回信已送出。謝謝你 (_ _)</h3><p class="small muted" style="margin:0">研究者會寄信到你剛才簽到的信箱，和你約時間。</p></div>`
+    : `<div class="iv"><h3>願意多聊聊嗎？</h3>
+        <p class="small" style="margin:0 0 6px">${esc(CONFIG.INTERVIEW)}</p>
+        <p class="small muted" style="margin:0">按下後，研究者會看到你的<b>信箱、年齡層與 PTT 年資</b>，只用來邀約受訪；你的其他作答內容不會和信箱放在一起。之後也可以拒絕或退出。</p>
+        <textarea maxlength="300" data-a="ivnote" placeholder="選填｜方便的時段、想聊的那篇文…">${esc(IV.note)}</textarea>
+        <div class="err" id="iverr"></div>
+        <button class="btn ghost" data-a="interview" style="margin-top:6px">[M] 我願意受訪</button></div>`;
+  return `<div class="conn">$ persona --calc --user=guest<br>讀取作答 .......... <span class="ok">[OK]</span>${r.n_compare?`<br>比對 ${r.n_compare} 位出席者 .. <span class="ok">[OK]</span>`:''}</div>
+    <div class="persona"><div class="emo">${p.emo}</div><p class="muted small" style="margin:0;text-align:center">你的數位告別人格是</p><h2>${p.name}</h2>${rarity}<p>${p.text}</p></div>
+    <div class="story">${st}</div>
+    <div class="sec">┤ 告別光譜 ├</div>
+    ${dimBars()}
+    <div class="sec">┤ 和其他鄉民比 ├</div>
+    <div class="stats">${statHTML}
+      <p class="note">${pct?`與 ${r.n_compare} 位已出席的鄉民比較${r.n_compare<10?'（人數還少，僅供參考）':''}`:''}${DEMO?'<br>預覽模式：百分比為示意值':''}</p></div>
+    ${isDesk() ? '' : cardHTML(p, r, no, d, ep, st) + `<div class="share"><button class="btn" data-a="save">[S] 儲存告別人格證明</button></div>
+    <p class="note">截圖你的告別人格，推文分享也歡迎 (´・ω・\`)</p>`}
+    ${iv}
+    <p class="note">感謝你出席這場告別式。<br>連線將於 <span style="color:var(--r)">░░</span> 秒後中斷<span class="cur">▌</span></p>`;
+}
+
+/* 告別人格證明卡（手機放在結果頁內，電腦放在左側舞台） */
+function cardHTML(p, r, no, d, ep, st){
+  return `<div class="card" id="card">
+      <div class="c small">一場沒有人來的告別式</div>
+      <div class="c t">告別人格證明</div>
+      <div class="dash"></div>
+      <div class="kv"><span>出席編號</span><span>No.${no}</span></div>
+      <div class="kv"><span>出席日期</span><span>${d}</span></div>
+      <div class="dash"></div>
+      <div class="c" style="color:var(--y);font-size:12px">${p.code}</div>
+      <div class="pn">${p.name}</div>
+      ${r.rarity!=null?`<div class="c small">全場僅 ${r.rarity}% 的出席者</div>`:''}
+      <div class="dash"></div>
+      ${dimBars()}
+      <div class="dash"></div>
+      <div class="small" style="line-height:1.8">${st}</div>
+      ${ep?`<div class="dash"></div><div class="c small muted">墓誌銘</div><div class="ep">「${esc(ep)}」</div>`:''}
+      <div class="dash"></div>
+      <div class="c small muted">收下的遺物</div>
+      <div class="relics">${[1,2,3,4,5,6].map(n=>'⊕'+RELIC[n][1]).join(' ')}</div>
+      <div class="dash"></div>
+      <div class="foot">bbs://farewell.404 · NTHU 無聲的告別<br>此證明僅此一張，請截圖保存</div>
+    </div>
+`;
+}
+const IV = {done:false, note:''};
+async function interview(btn){
+  btn.disabled = true; btn.textContent = '送出中…';
+  try{
+    if (!DEMO) await rpc('interview_optin',{p_email:EMAIL.trim(), p_age:A.q2||'', p_years:A.q1||'', p_note:IV.note||''});
+    IV.done = true; render(); document.querySelector('.iv').scrollIntoView({block:'center'});
+  }catch(e){ document.getElementById('iverr').textContent='送出失敗，請再試一次。'; btn.disabled=false; btn.textContent='[M] 我願意受訪'; }
+}
+
+
+/* ---------- 後端 ---------- */
+async function rpc(fn, body){
+  const r = await fetch(`${CONFIG.SUPABASE_URL.replace(/\/$/,'')}/rest/v1/rpc/${fn}`,{method:'POST',
+    headers:{'apikey':CONFIG.SUPABASE_ANON_KEY,'Authorization':'Bearer '+CONFIG.SUPABASE_ANON_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify(body)});
+  const j = await r.json().catch(()=>null);
+  if (!r.ok) throw new Error((j&&j.message)||('HTTP '+r.status));
+  return j;
+}
+function payload(isPtt){
+  const ids = new Set(['q1']); S.forEach(s=>{ if(s.type==='q' && visible(s)) s.items.forEach(it=>{ ids.add(it.id); ids.add(it.id+'_other'); }); });
+  const ans = {}; for (const k in A) if (ids.has(k)) ans[k] = A[k];
+  return {is_ptt_user:isPtt, answers:ans, persona_calc: isPtt ? calcPersona() : null, client_meta:{v:'v10-research-fix', mobile:matchMedia('(max-width:600px)').matches, lang:navigator.language}};
+}
+async function submit(){
+  const isPtt = A.q1!=='non';
+  try{
+    if (DEMO){
+      await new Promise(r=>setTimeout(r,900));
+      if (!isPtt) return goto('thanks');
+      const sc = scores(); const f = x=>Math.max(3,Math.min(97,Math.round((x-1)/4*90+5)));
+      RESULT = {attendee_no:42, n_compare:41, rarity:23, pct:{archive:f(sc.archive),attach:f(sc.attach),ritual:f(sc.ritual)}};
+    } else {
+      const res = await rpc('submit_response',{p_email:EMAIL.trim(), p_payload:payload(isPtt)});
+      if (!isPtt) return goto('thanks');
+      RESULT = res;
+    }
+    goto('result');
+  }catch(e){
+    SUBMITTING = false;
+    if (e.message==='DUPLICATE') return goto('dup');
+    document.getElementById('err').textContent = '送出失敗，可能是網路不穩。你的答案還在，請再試一次。';
+    document.getElementById('retry').innerHTML = `<div style="max-width:240px;margin:16px auto"><button class="btn" data-a="retry">重新送出</button></div>`;
+  }
+}
+
+/* ---------- 導覽 ---------- */
+function goto(t){ if(!S.find(s=>s.type===t)) S.push({type:t}); hist.push(idx); idx = IDX(t); render(); scrollTo(0,0); }
+function go(i){ hist.push(idx); idx=i; render(); scrollTo(0,0); }
+/* 非 PTT 使用者走短版：只看標記 both / non 的畫面；PTT 使用者看預設與 both */
+const NONPTT = () => A.q1==='non';
+function visible(s){
+  if (['submit','result','dup','thanks'].includes(s.type)) return true;
+  return NONPTT() ? (s.who==='both' || s.who==='non') : s.who!=='non';
+}
+function nextIndex(i){ do { i++; } while (i < S.length && !visible(S[i])); return i; }
+async function next(){
+  const s = S[idx];
+  if (!screenOK(s)) return;
+  if (s.type==='email' && !DEMO){
+    nextBtn.disabled = true; nextBtn.textContent = '確認中…';
+    try{ if (await rpc('check_email',{p_email:EMAIL.trim()})) return goto('dup'); }
+    catch(e){ document.getElementById('err').textContent='連線失敗，請稍後再試。'; chrome(); return; }
+  }
+  go(nextIndex(idx));
+}
+nextBtn.onclick = next;
+backBtn.onclick = ()=>{ if(hist.length){ idx = hist.pop(); render(); scrollTo(0,0);} };
+
+const ROOT = document.querySelector('.layout');
+ROOT.addEventListener('click', e=>{
+  if (typeSkip){ typeSkip(); return; }   // 打字中：點一下直接印完
+  const b = e.target.closest('[data-a]'); if(!b) return;
+  const a = b.dataset.a, q = b.dataset.q, v = b.dataset.v;
+  const s = S[idx];
+  if (a==='single'){
+    const it = s.items.find(i=>i.id===q);
+    A[q] = it.num ? +v : v; render();
+    if (s.items.length===1 && !it.last){ app.firstElementChild.classList.add('picked'); setTimeout(()=>{ if(S[idx]===s) next(); }, 480); }
+  } else if (a==='multi'){
+    const it = s.items.find(i=>i.id===q); let arr = (A[q]||[]).slice();
+    if (arr.includes(v)) arr = arr.filter(x=>x!==v);
+    else if (v===it.exclusive) arr = [v];
+    else { arr = arr.filter(x=>x!==it.exclusive); if(!it.max||arr.length<it.max) arr.push(v); }
+    A[q] = arr; if(!arr.includes(it.other)) delete A[q+'_other']; render();
+  } else if (a==='num'){ A[q] = +v; render(); }
+  else if (a==='links'){ A.q5 = +v; render(); }
+  else if (a==='grid'){ A[q] = Object.assign({}, A[q], {[b.dataset.k]: +v}); render();
+    const row = app.querySelectorAll('.grid .row'); const it = s.items.find(i=>i.id===q);
+    const nextRow = it.rows.findIndex(([k])=>!A[q][k]); if(nextRow>=0 && row[nextRow]) row[nextRow].scrollIntoView({behavior:'smooth',block:'center'}); }
+  else if (a==='retry'){ render(); }
+  else if (a==='reemail'){ EMAIL=''; idx = IDX('email'); render(); }
+  else if (a==='save'){ saveCard(b); }
+  else if (a==='interview'){ interview(b); }
+});
+ROOT.addEventListener('input', e=>{
+  const t = e.target; const a = t.dataset.a;
+  if (a==='text'){ A[t.dataset.q] = t.value; }
+  else if (a==='email'){ EMAIL = t.value; const er=document.getElementById('err'); if(er) er.textContent=''; }
+  else if (a==='check'){ A[t.dataset.q] = t.checked; }
+  else if (a==='ivnote'){ IV.note = t.value; }
+  else if (a==='flag'){ FLAG = Object.assign({}, FLAG, {[t.dataset.k]: t.checked}); }
+  chrome();
+});
+app.addEventListener('keydown', e=>{ if(e.key==='Enter' && e.target.matches('input[type=email],input[type=text]')){ e.preventDefault(); next(); } });
+
+async function saveCard(btn){
+  const el = document.getElementById('card');
+  if (!window.html2canvas){ alertText(btn,'請直接截圖保存'); return; }
+  btn.disabled = true; btn.textContent = '印製中…';
+  try{
+    const c = await html2canvas(el,{scale:3,backgroundColor:'#000000'});
+    const blob = await new Promise(r=>c.toBlob(r,'image/png'));
+    const file = new File([blob],'告別人格證明.png',{type:'image/png'});
+    if (navigator.canShare && navigator.canShare({files:[file]})) { await navigator.share({files:[file], title:'我的數位告別人格'}).catch(()=>{}); }
+    else { const u = URL.createObjectURL(blob); const l = document.createElement('a'); l.href=u; l.download=file.name; l.click(); setTimeout(()=>URL.revokeObjectURL(u),2000); }
+    btn.textContent = '已儲存 ✓';
+  }catch(_){ alertText(btn,'請直接截圖保存'); }
+  setTimeout(()=>{btn.disabled=false;btn.textContent='[S] 儲存告別人格證明'},2200);
+}
+function alertText(btn,t){ btn.textContent=t; }
+
+
+document.addEventListener('keydown', e=>{
+  if (e.target.matches('input[type=text],input[type=email],textarea') || e.metaKey || e.ctrlKey || e.altKey) return;
+  const s = S[idx];
+  if (typeSkip && (e.key==='Enter' || /^[1-9]$/.test(e.key))) typeSkip();
+  if (e.key==='Enter'){ if(!nextBtn.disabled && document.getElementById('nav').style.display!=='none'){ e.preventDefault(); next(); } return; }
+  if (/^[1-9]$/.test(e.key) && s.type==='q'){
+    const it = s.items.find(i=>i.kind==='single'||i.kind==='multi'); if(!it) return;
+    const btn = app.querySelectorAll(`[data-q="${it.id}"].opt`)[+e.key-1]; if(btn && !btn.disabled){ e.preventDefault(); btn.click(); }
+  }
+});
+MQ.addEventListener('change', ()=>render());
+window.addEventListener('beforeunload', e=>{ const t=S[idx].type; if(['q','act','reveal'].includes(t)){ e.preventDefault(); e.returnValue=''; } });
+render();
+
+/* 標題 glitch：隨機間隔發作，偶爾連發；同時把「別」「░」短暫換成亂碼 */
+(function(){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const GL = '▓▒░█#%&@$<>/\\_?!01';
+  function burst(){
+    document.querySelectorAll('.glitch').forEach(el=>{
+      el.classList.remove('on'); void el.offsetWidth; el.classList.add('on');
+      setTimeout(()=>el.classList.remove('on'), 460);
+    });
+    document.querySelectorAll('.glitch .rot, .scr').forEach(sp=>{
+      if (sp.dataset.o == null) sp.dataset.o = sp.textContent;
+      const o = sp.dataset.o; let n = 0;
+      sp.classList.add('hot');
+      const t = setInterval(()=>{
+        sp.textContent = [...o].map(()=>GL[Math.random()*GL.length|0]).join('');
+        if (++n > 5){ clearInterval(t); sp.textContent = o; sp.classList.remove('hot'); }
+      }, 60);
+    });
+    setTimeout(burst, Math.random() < .3 ? 180 + Math.random()*200 : 1800 + Math.random()*3200);
+  }
+  setTimeout(burst, 1200);
+})();
+/* 像素圖動畫：逐格換畫面、星星閃爍，偶爾有一小段像素「腐蝕」成 ░ */
+(function(){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  setInterval(()=>{
+    const now = performance.now(), t = Math.floor(now/450);
+    document.querySelectorAll('pre.px[data-art]').forEach(el=>{
+      const a = PXF[el.dataset.art]; if (!a) return;
+      const i = Math.floor(now/a.ms) % a.f.length, key = i+'_'+t;
+      if (el._k !== key){ el._k = key; el.innerHTML = pxRows(a.f[i], t); }
+    });
+  }, 60);
+  setInterval(()=>{
+    const els = [...document.querySelectorAll('pre.px')].filter(e=>e.offsetParent); if (!els.length) return;
+    const el = els[Math.random()*els.length|0], cs = el.querySelectorAll('.pc'); if (!cs.length) return;
+    const c = cs[Math.random()*cs.length|0], o = c.textContent;
+    c.textContent = o.replace(/[█▓▒]/g,'░');
+    setTimeout(()=>{ if (c.isConnected && c.textContent!==o && /░/.test(c.textContent)) c.textContent = o; }, 180+Math.random()*260);
+  }, 700);
+})();
+</script>
+</body>
+</html>
